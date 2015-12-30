@@ -4,6 +4,7 @@ public class Country {
 	
 	private int id;
 	private String countryName;
+	private String countryPyName;
 	private String countryCode;
 	private int cityId;
 	
@@ -21,6 +22,14 @@ public class Country {
 	
 	public void setCountryName(String countryName) {
 		this.countryName = countryName;
+	}
+	
+	public String getCountryPyName() {
+		return countryPyName;
+	}
+	
+	public void setCountryPyName(String countryPyName) {
+		this.countryPyName = countryPyName;
 	}
 	
 	public String getCountryCode() {

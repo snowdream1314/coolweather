@@ -66,6 +66,7 @@ public class CoolWeatherDB {
 		if (city != null) {
 			ContentValues values = new ContentValues();
 			values.put("city_name", city.getCityName());
+			values.put("city_pyname",city.getCityPyName());
 			values.put("city_code", city.getCityCode());
 			values.put("province_id", city.getProvinceId());
 			db.insert("City", null, values);
@@ -95,6 +96,7 @@ public class CoolWeatherDB {
 		if (country != null) {
 			ContentValues values = new ContentValues();
 			values.put("country_name", country.getCountryName());
+			values.put("country_pyname", country.getCountryPyName());
 			values.put("country_code", country.getCountryCode());
 			values.put("city_id", country.getCityId());
 			db.insert("Country", null, values);
