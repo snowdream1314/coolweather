@@ -71,7 +71,7 @@ public class ChooseAreaActivity extends Activity {
 			public void onItemClick(AdapterView<?> arg0, View view, int index, long arg3) {
 				if (currentLevel == LEVEL_PROVINCE) {
 					selectedProvince = provinceList.get(index);
-					queryCiyies();
+					queryCities();
 				} else if (currentLevel == LEVEL_CITY) {
 					selectedCity = cityList.get(index);
 					queryCountries();
@@ -99,7 +99,7 @@ public class ChooseAreaActivity extends Activity {
 	}
 	
 	//查询选中的省内所有的市，优先从数据库中查询，如果数据库中没有则去服务器查询
-	private void queryCiyies() {
+	private void queryCities() {
 		cityList = coolWeatherDB.loadCities(selectedProvince.getId());
 		if (cityList.size() > 0) {
 			dataList.clear();
@@ -109,6 +109,7 @@ public class ChooseAreaActivity extends Activity {
 			adapter.notifyDataSetChanged();
 			listView.setSelection(0);
 			titleText.setText(selectedProvince.getProvinceName());
+//			titleText.setText("中国");
 			currentLevel = LEVEL_CITY;
 		} else {
 			queryFromServer(selectedProvince.getProvinceCode(), "city");
@@ -141,9 +142,15 @@ public class ChooseAreaActivity extends Activity {
 			@Override
 			public void onFinish(String response) {
 				boolean result = false;
+//				Utility.parseXMLWithPull(response);
 				if ("province".equals(type)) {
 					result = Utility.handleProvincesResponse(coolWeatherDB, response);
+				} else if ("city".equals(type)) {
+					result = Utility.handleCitiesResponse(coolWeatherDB, response, code, selectedProvince.getId());
+//				} else if ("country".equals(type)) {
+//					result = Utility.handleCountriesResponse(coolWeatherDB, response, selectedProvince.getId(), selectedCity.);
 				}
+				
 				if (result) {
 					//通过runOnUiThread方法回主线程处理逻辑
 					runOnUiThread(new Runnable() {
@@ -152,6 +159,10 @@ public class ChooseAreaActivity extends Activity {
 							closeProgressDialog();
 							if ("province".equals(type)) {
 								queryProvinces();
+							} else if ("city".equals(type)) {
+								queryCities();
+//							} else if ("country".equals(type)) {
+//								queryCountries();
 							}
 						}
 					});
@@ -186,6 +197,16 @@ public class ChooseAreaActivity extends Activity {
 	private void closeProgressDialog() {
 		if (progressDialog != null) {
 			progressDialog.dismiss();
+		}
+	}
+	
+	//捕获back键	public void onBackPressed() {
+		if (currentLevel == LEVEL_COUNTRY) {
+			queryCities();
+		} else if (currentLevel == LEVEL_CITY) {
+			queryProvinces();
+		} else {
+			finish();
 		}
 	}
 }

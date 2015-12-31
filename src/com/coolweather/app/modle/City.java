@@ -6,6 +6,7 @@ public class City {
 	private String cityName;
 	private String cityPyName;
 	private String cityCode;
+//	private String cityNum;
 	private int provinceId;
 	
 	public int getId() {
@@ -39,6 +40,14 @@ public class City {
 	public void setCityCode(String cityCode) {
 		this.cityCode = cityCode;
 	}
+	
+//	public String getCityNum() {
+//		return cityNum;
+//	}
+//	
+//	public void setCityNum(String cityNum) {
+//		this.cityNum = cityNum;
+//	}
 	
 	public int getProvinceId() {
 		return provinceId;
