@@ -59,7 +59,7 @@ public class Utility {
 					if (array[0].substring(3, 5).equals(provinceCode) && array[0].endsWith("00") && array[0].substring(5, 7).equals("01")) {
 						//直辖市
 						City city= new City();
-						city.setCityCode(array[0].substring(5, 7));
+						city.setCityCode(array[0]);
 						city.setCityName(array[1]);
 						city.setCityPyName(array[2]);
 						city.setProvinceId(provinceId);
@@ -67,12 +67,14 @@ public class Utility {
 						coolWeatherDB.saveCity(city);
 					} else if (array[0].substring(3, 5).equals(provinceCode) && array[0].endsWith("01")) {
 						City city= new City();
-						city.setCityCode(array[0].substring(5, 7));
+						city.setCityCode(array[0]);
 						city.setCityName(array[1]);
 						city.setCityPyName(array[2]);
 						city.setProvinceId(provinceId);
 						//将解析出来的数据存储到City表
 						coolWeatherDB.saveCity(city);
+					} else {
+						continue;
 					}
 				}
 				return true;
