@@ -1,11 +1,8 @@
 package com.coolweather.app.activity;
 
-//import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.List;
 
-//import org.xmlpull.v1.XmlPullParser;
-//import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.coolweather.app.R;
 import com.coolweather.app.modle.City;
@@ -43,8 +40,6 @@ public class ChooseAreaActivity extends Activity {
 	private ArrayAdapter<String> adapter;
 	private CoolWeatherDB coolWeatherDB;
 	private List<String> dataList = new ArrayList<String>();
-//	private static String xmlData;
-//	private static String xmlDatas;
 	
 	//省列表
 	private List<Province> provinceList;
@@ -64,12 +59,16 @@ public class ChooseAreaActivity extends Activity {
 	//当前选中的级别
 	private int currentLevel;
 	
+	//是否从weatherActivity跳转过来
+	private boolean isFromWeatherActivity;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		if (prefs.getBoolean("city_selected", false)) {
+		//已经选择了城市且不是从WeatherActivity跳转过来，才会直接跳到WeatherActivity
+		if (prefs.getBoolean("city_selected", false) && !isFromWeatherActivity) {
 			Intent intent = new Intent(this, WeatherActivity.class);
 			startActivity(intent);
 			finish();
@@ -229,85 +228,12 @@ public class ChooseAreaActivity extends Activity {
 		} else if (currentLevel == LEVEL_CITY) {
 			queryProvinces();
 		} else {
+			if (isFromWeatherActivity) {
+				Intent intent = new Intent(this, WeatherActivity.class);
+				startActivity(intent);
+			}
 			finish();
 		}
 	}
 	
-//	public synchronized static boolean handleCitiesResponse(CoolWeatherDB coolWeatherDB, String response, String provinceCode, int provinceId) {
-//		parseXMLWithPull(response.toString());
-//		if (xmlDatas.length() > 0) {
-//			String[] items = xmlDatas.split(";");
-//			if (items != null && items.length > 0) {
-//				for (String item : items) {
-//					String[] array = item.split(",");
-//					//只处理国内的
-//					if (array[0].substring(3, 5).equals(provinceCode) && array[0].endsWith("00") && array[0].substring(5, 7).equals("01")) {
-//						//直辖市
-//						City city= new City();
-//						city.setCityCode(array[0]);
-//						city.setCityName(array[1]);
-//						city.setCityPyName(array[2]);
-//						city.setProvinceId(provinceId);
-//						//将解析出来的数据存储到City表
-//						coolWeatherDB.saveCity(city);
-//					} else if (array[0].substring(3, 5).equals(provinceCode) && array[0].endsWith("01")) {
-//						City city= new City();
-//						city.setCityCode(array[0]);
-//						city.setCityName(array[1]);
-//						city.setCityPyName(array[2]);
-//						city.setProvinceId(provinceId);
-//						//将解析出来的数据存储到City表
-//						coolWeatherDB.saveCity(city);
-//					}
-//				}
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
-//	
-//	public static void parseXMLWithPull(String response) {
-//		try {
-//			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-//			XmlPullParser xmlPullParser = factory.newPullParser();
-//			xmlPullParser.setInput(new StringReader(response));
-//			int eventType = xmlPullParser.getEventType();
-//			String d1 = "";
-//			String d2 = "";
-//			String d3 = "";
-//			String d4 = "";
-//			xmlData = null;
-//			xmlDatas = null;
-//			while (eventType != XmlPullParser.END_DOCUMENT) {
-//				String nodeName = xmlPullParser.getName();
-//				switch (eventType) {
-//				//开始解析节点
-//				case XmlPullParser.START_TAG: {
-//					if ("d".equals(nodeName)) {
-//						d1 = xmlPullParser.getAttributeValue(0);
-//						d2 = xmlPullParser.getAttributeValue(1);
-//						d3 = xmlPullParser.getAttributeValue(2);
-//						d4 = xmlPullParser.getAttributeValue(3);
-//						xmlData = d1 + "," + d2 + "," + d3 + "," + d4;
-//						if (xmlData != null && d1.startsWith("101")) {
-//							xmlDatas = xmlDatas + ";" + xmlData;
-//						}
-//					}
-//					break;
-//				}
-//				case XmlPullParser.END_TAG: {
-//					if ("c".equals(nodeName)) {
-////						responseText.setText(texts);
-//					}
-//				}
-//					break;
-//				default:
-//					break;
-//				}
-//				eventType = xmlPullParser.next();
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-//	}
 }
