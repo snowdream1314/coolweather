@@ -71,6 +71,7 @@ public class CoolWeatherDB {
 			values.put("city_name", city.getCityName());
 			values.put("city_pyname",city.getCityPyName());
 			values.put("city_code", city.getCityCode());
+			values.put("city_num", city.getCityNum());
 			values.put("province_id", city.getProvinceId());
 			db.insert("City", null, values);
 		}
@@ -85,6 +86,7 @@ public class CoolWeatherDB {
 				City city = new City();
 				city.setId(cursor.getInt(cursor.getColumnIndex("id")));
 				city.setCityCode(cursor.getString(cursor.getColumnIndex("city_code")));
+				city.setCityNum(cursor.getString(cursor.getColumnIndex("city_num")));
 				city.setCityName(cursor.getString(cursor.getColumnIndex("city_name")));
 				city.setProvinceId(provinceId);
 				list.add(city);

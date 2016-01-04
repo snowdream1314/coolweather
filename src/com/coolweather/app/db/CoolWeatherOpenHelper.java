@@ -19,6 +19,7 @@ public class CoolWeatherOpenHelper extends SQLiteOpenHelper {
 			+ "city_name text, " 
 			+ "city_pyname text,"
 			+ "city_code text, "
+			+ "city_num text, "
 			+ "province_id integer)"; 
 	
 	//CountryΩ®±Ì”Ôæ‰

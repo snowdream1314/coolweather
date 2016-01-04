@@ -7,8 +7,9 @@ import org.xmlpull.v1.XmlPullParserFactory;
 
 import com.coolweather.app.modle.City;
 import com.coolweather.app.modle.CoolWeatherDB;
-//import com.coolweather.app.modle.Country;
+import com.coolweather.app.modle.Country;
 import com.coolweather.app.modle.Province;
+
 
 public class Utility {
 	
@@ -56,25 +57,25 @@ public class Utility {
 				for (String item : items) {
 					String[] array = item.split(",");
 					//只处理国内的
-					if (array[0].substring(3, 5).equals(provinceCode) && array[0].endsWith("00") && array[0].substring(5, 7).equals("01")) {
+					if (array[0].substring(3).startsWith(provinceCode) && array[0].endsWith("00") && array[0].substring(5, 7).equals("01")) {
 						//直辖市
 						City city= new City();
 						city.setCityCode(array[0]);
+						city.setCityNum(array[0].substring(5, 7));
 						city.setCityName(array[1]);
 						city.setCityPyName(array[2]);
 						city.setProvinceId(provinceId);
 						//将解析出来的数据存储到City表
 						coolWeatherDB.saveCity(city);
-					} else if (array[0].substring(3, 5).equals(provinceCode) && array[0].endsWith("01")) {
+					} else if (array[0].substring(3).startsWith(provinceCode) && array[0].endsWith("01")) {
 						City city= new City();
 						city.setCityCode(array[0]);
+						city.setCityNum(array[0].substring(5, 7));
 						city.setCityName(array[1]);
 						city.setCityPyName(array[2]);
 						city.setProvinceId(provinceId);
 						//将解析出来的数据存储到City表
 						coolWeatherDB.saveCity(city);
-					} else {
-						continue;
 					}
 				}
 				return true;
@@ -83,33 +84,38 @@ public class Utility {
 		return false;
 	}
 	
-//	public synchronized static boolean handleCountriesResponse(CoolWeatherDB coolWeatherDB, String response, int provinceId, int cityId) {
-//		if (xmlDatas.length() > 0) {
-//			String[] items = xmlDatas.split(";");
-//				if (items != null && items.length > 0) {
-//					for (String item : items) {
-//						String[] array = item.split(",");
-//						//只处理国内的
-//						if (array[0].endsWith("00")) {
-//							continue;
-//						}
-//						if (array[0].startsWith("101") && array[0].substring(3, 5) == Integer.toString(provinceId) && array[0].substring(5, 7) == Integer.toString(cityId)) {
-//							Country country= new Country();
-//							country.setCountryCode(array[0].substring(7, 9));
-//							country.setCountryName(array[1]);
-//							country.setCountryPyName(array[2]);
-//							country.setCityId(cityId);
-//							//将解析出来的数据存储到City表
-//							coolWeatherDB.saveCountry(country);
-//						} else {
-//							break;
-//						}
-//					}
-//				}
-//			return true;
-//		}
-//		return false;
-//	}
+	public synchronized static boolean handleCountriesResponse(CoolWeatherDB coolWeatherDB, String response, String cityNum, String provinceCode, int cityId) {
+		if (xmlDatas.length() > 0) {
+			String[] items = xmlDatas.split(";");
+			if (items != null && items.length > 0) {
+				for (String item : items) {
+					String[] array = item.split(",");
+					//只处理国内的
+					if (array[0].substring(3).startsWith(provinceCode)) {
+						if ( array[0].endsWith("00")) {
+							Country country= new Country();
+							country.setCountryCode(array[0]);
+							country.setCountryName(array[1]);
+							country.setCountryPyName(array[2]);
+							country.setCityId(cityId);
+							//将解析出来的数据存储到Country表
+							coolWeatherDB.saveCountry(country);
+						} else if ( array[0].substring(5).startsWith(cityNum)){
+							Country country= new Country();
+							country.setCountryCode(array[0]);
+							country.setCountryName(array[1]);
+							country.setCountryPyName(array[2]);
+							country.setCityId(cityId);
+							//将解析出来的数据存储到Country表
+							coolWeatherDB.saveCountry(country);
+						}
+					}
+				}
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	public static void parseXMLWithPull(String response) {
 		try {
