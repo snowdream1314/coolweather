@@ -5,8 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -14,6 +12,7 @@ import com.coolweather.app.modle.City;
 import com.coolweather.app.modle.CoolWeatherDB;
 import com.coolweather.app.modle.Country;
 import com.coolweather.app.modle.Province;
+import com.google.gson.Gson;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -172,33 +171,77 @@ public class Utility {
 	}
 	
 	//解析服务器返回的JSON数据，并存储到本地
+//	public static void handleWeatherResponse(Context context, String response) {
+//		try {
+//			JSONObject jsonObject = new JSONObject(response);
+//			JSONObject weatherInfo = jsonObject.getJSONObject("weatherinfo");
+//			String cityName = weatherInfo.getString("city");
+//			String weatherCode = weatherInfo.getString("cityid");
+//			String temp1 = weatherInfo.getString("temp1");
+//			String temp2 = weatherInfo.getString("temp2");
+//			String weatherDesp = weatherInfo.getString("weather");
+//			String publishTime = weatherInfo.getString("ptime");
+//			saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, publishTime);
+//		} catch (JSONException e) {
+//			e.printStackTrace();
+//		}
+//	}
+	
+	//解析服务器返回的JSON数据，并存储到本地
 	public static void handleWeatherResponse(Context context, String response) {
+		String fengXiang,fengLi,tempHigh,tempLow,weatherDesp,dateNow;
+		Gson gson = new Gson();
+		JsonBean jsonBean = gson.fromJson(response, JsonBean.class);
+		//获取当天天气信息
 		try {
-			JSONObject jsonObject = new JSONObject(response);
-			JSONObject weatherInfo = jsonObject.getJSONObject("weatherinfo");
-			String cityName = weatherInfo.getString("city");
-			String weatherCode = weatherInfo.getString("cityid");
-			String temp1 = weatherInfo.getString("temp1");
-			String temp2 = weatherInfo.getString("temp2");
-			String weatherDesp = weatherInfo.getString("weather");
-			String publishTime = weatherInfo.getString("ptime");
-			saveWeatherInfo(context, cityName, weatherCode, temp1, temp2, weatherDesp, publishTime);
-		} catch (JSONException e) {
+			String cityName = jsonBean.getData().getCity();
+			String tempNow = jsonBean.getData().getWenDU().concat("°");
+			for (int i=0; i<5; i++) {
+				fengXiang = jsonBean.getData().getForecast().get(i).getFengXiang();
+				fengLi = jsonBean.getData().getForecast().get(i).getFengLi();
+				tempHigh = jsonBean.getData().getForecast().get(i).getHigh().replace("高温 ", "");
+				tempLow = jsonBean.getData().getForecast().get(i).getLow().replace("低温 ", "");
+				weatherDesp = jsonBean.getData().getForecast().get(i).getType();
+				dateNow = jsonBean.getData().getForecast().get(i).getDate();
+				saveWeatherInfo(context, cityName, tempNow, fengXiang, fengLi, tempHigh, tempLow, weatherDesp, dateNow, i);
+			}
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		
+		//获取天气预报
+//		try {
+//			Gson gson = new Gson();
+//			JsonBean jsonBean = gson.fromJson(response, JsonBean.class);
+//			String fengXiang = jsonBean.getData().getForecast().get(1).getFengXiang();
+//			String fengLi = jsonBean.getData().getForecast().get(1).getFengLi();
+//			String tempHigh = jsonBean.getData().getForecast().get(0).getHigh().replace("高温 ", "");
+//			String tempLow = jsonBean.getData().getForecast().get(0).getLow().replace("低温 ", "");
+//			String weatherDesp = jsonBean.getData().getForecast().get(0).getType();
+//			String dateNow = jsonBean.getData().getForecast().get(0).getDate();
+//			saveForeWeatherInfo(context, fengXiang, fengLi, tempHigh, tempLow, weatherDesp, dateNow);
+//		}catch (Exception e) {
+//			e.printStackTrace();
+//		}
+		
 	}
 	
 	//将服务器返回的所有天气信息存储到SharedPreferences文件中
-	public static void saveWeatherInfo(Context context, String cityName, String weatherCode, String temp1, String temp2, String weatherDesp, String publishTime) {
+	public static void saveWeatherInfo(Context context, String cityName, String tempNow, String fengXiang, String fengLi, String tempHigh, String tempLow, String weatherDesp, String dateNow, int i) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
 		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putBoolean("city_selected", true);
 		editor.putString("city_name", cityName);
-		editor.putString("weather_code", weatherCode);
-		editor.putString("temp1", temp1);
-		editor.putString("temp2", temp2);
-		editor.putString("weatherDesp", weatherDesp);
-		editor.putString("publish_time", publishTime);
+//		editor.putString("weather_code", weatherCode);
+		editor.putString("weather_code", "");
+		editor.putString("tempNow", tempNow);
+		editor.putString("temp1".concat("_" + Integer.toString(i)), tempLow);
+		editor.putString("temp2".concat("_" + Integer.toString(i)), tempHigh);
+		editor.putString("feng_xiang".concat("_" + Integer.toString(i)), fengXiang);
+		editor.putString("feng_li".concat("_" + Integer.toString(i)), fengLi);
+		editor.putString("weatherDesp".concat("_" + Integer.toString(i)), weatherDesp);
+//		editor.putString("publish_time", publishTime);
+		editor.putString("publish_time".concat("_" + Integer.toString(i)), dateNow);
 		editor.putString("current_date", sdf.format(new Date()));
 		editor.commit();
 	}

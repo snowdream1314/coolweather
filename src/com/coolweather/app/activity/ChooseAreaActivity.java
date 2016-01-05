@@ -183,8 +183,8 @@ public class ChooseAreaActivity extends Activity {
 								queryProvinces();
 							} else if ("city".equals(type)) {
 								queryCities();
-//							} else if ("country".equals(type)) {
-//								queryCountries();
+							} else if ("country".equals(type)) {
+								queryCountries();
 							}
 						}
 					});
