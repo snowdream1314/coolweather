@@ -198,7 +198,10 @@ public class Utility {
 			String tempNow = jsonBean.getData().getWenDU().concat("°");
 			for (int i=0; i<5; i++) {
 				fengXiang = jsonBean.getData().getForecast().get(i).getFengXiang();
-				fengLi = jsonBean.getData().getForecast().get(i).getFengLi().replace("级", "");
+				fengLi = jsonBean.getData().getForecast().get(i).getFengLi();
+				if (fengLi.contains("微风")) {
+					fengLi = fengLi.replace("级", "");
+				}
 				tempHigh = jsonBean.getData().getForecast().get(i).getHigh().replace("高温 ", "");
 				tempLow = jsonBean.getData().getForecast().get(i).getLow().replace("低温 ", "");
 				weatherDesp = jsonBean.getData().getForecast().get(i).getType();
