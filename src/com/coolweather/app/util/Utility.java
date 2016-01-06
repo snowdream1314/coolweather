@@ -198,7 +198,7 @@ public class Utility {
 			String tempNow = jsonBean.getData().getWenDU().concat("¡ã");
 			for (int i=0; i<5; i++) {
 				fengXiang = jsonBean.getData().getForecast().get(i).getFengXiang();
-				fengLi = jsonBean.getData().getForecast().get(i).getFengLi();
+				fengLi = jsonBean.getData().getForecast().get(i).getFengLi().replace("¼¶", "");
 				tempHigh = jsonBean.getData().getForecast().get(i).getHigh().replace("¸ßÎÂ ", "");
 				tempLow = jsonBean.getData().getForecast().get(i).getLow().replace("µÍÎÂ ", "");
 				weatherDesp = jsonBean.getData().getForecast().get(i).getType();

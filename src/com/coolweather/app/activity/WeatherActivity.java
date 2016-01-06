@@ -56,7 +56,10 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	private Button refreshWeather;
 	
 	//天气预报
-	private TextView fore_date1,fore_date1_weather,fore_date1_temp1,fore_date1_temp2,fore_date1_fx,fore_date1_fl;
+	private TextView fore_date1,fore_date1_weather,fore_date1_temp1,fore_date1_temp2,fore_date1_fx,fore_date1_fl, 
+					 fore_date2,fore_date2_weather,fore_date2_temp1,fore_date2_temp2,fore_date2_fx,fore_date2_fl,
+					 fore_date3,fore_date3_weather,fore_date3_temp1,fore_date3_temp2,fore_date3_fx,fore_date3_fl,
+					 fore_date4,fore_date4_weather,fore_date4_temp1,fore_date4_temp2,fore_date4_fx,fore_date4_fl;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +68,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.weather_layout);
 		//初始化各控件
 		weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
-		weather_forecast = (LinearLayout) findViewById(R.id.weather_forecast);
+//		weather_forecast = (LinearLayout) findViewById(R.id.weather_forecast);
 		cityNameText = (TextView) findViewById(R.id.city_name);
 		publishText = (TextView) findViewById(R.id.publish_text);
 		weatherDespText = (TextView) findViewById(R.id.weather_desp);
@@ -74,12 +77,35 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		tempNow = (TextView) findViewById(R.id.temp_now);
 		fengXiang = (TextView) findViewById(R.id.feng_xiang);
 		fengLi = (TextView) findViewById(R.id.feng_li);
+		
 		fore_date1 = (TextView) findViewById(R.id.fore_date1);
 		fore_date1_weather = (TextView) findViewById(R.id.fore_date1_weather);
 		fore_date1_temp1 = (TextView) findViewById(R.id.fore_date1_temp1);
 		fore_date1_temp2 = (TextView) findViewById(R.id.fore_date1_temp2);
 		fore_date1_fx = (TextView) findViewById(R.id.fore_date1_fx);
 		fore_date1_fl = (TextView) findViewById(R.id.fore_date1_fl);
+		
+		fore_date2 = (TextView) findViewById(R.id.fore_date2);
+		fore_date2_weather = (TextView) findViewById(R.id.fore_date2_weather);
+		fore_date2_temp1 = (TextView) findViewById(R.id.fore_date2_temp1);
+		fore_date2_temp2 = (TextView) findViewById(R.id.fore_date2_temp2);
+		fore_date2_fx = (TextView) findViewById(R.id.fore_date2_fx);
+		fore_date2_fl = (TextView) findViewById(R.id.fore_date2_fl);
+		
+		fore_date3 = (TextView) findViewById(R.id.fore_date3);
+		fore_date3_weather = (TextView) findViewById(R.id.fore_date3_weather);
+		fore_date3_temp1 = (TextView) findViewById(R.id.fore_date3_temp1);
+		fore_date3_temp2 = (TextView) findViewById(R.id.fore_date3_temp2);
+		fore_date3_fx = (TextView) findViewById(R.id.fore_date3_fx);
+		fore_date3_fl = (TextView) findViewById(R.id.fore_date3_fl);
+		
+		fore_date4 = (TextView) findViewById(R.id.fore_date4);
+		fore_date4_weather = (TextView) findViewById(R.id.fore_date4_weather);
+		fore_date4_temp1 = (TextView) findViewById(R.id.fore_date4_temp1);
+		fore_date4_temp2 = (TextView) findViewById(R.id.fore_date4_temp2);
+		fore_date4_fx = (TextView) findViewById(R.id.fore_date4_fx);
+		fore_date4_fl = (TextView) findViewById(R.id.fore_date4_fl);
+		
 //		currentDateText = (TextView) findViewById(R.id.current_date);
 		currentDate = (TextView) findViewById(R.id.date);
 		switchCity = (Button) findViewById(R.id.switch_city);
@@ -182,6 +208,27 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		fore_date1_temp2.setText(pref.getString("temp2_1", ""));
 		fore_date1_fx.setText(pref.getString("feng_xiang_1", ""));
 		fore_date1_fl.setText(pref.getString("feng_li_1", ""));
+		
+		fore_date2.setText(pref.getString("publish_time_2", ""));
+		fore_date2_weather.setText(pref.getString("weatherDesp_2", ""));
+		fore_date2_temp1.setText(pref.getString("temp1_2", ""));
+		fore_date2_temp2.setText(pref.getString("temp2_2", ""));
+		fore_date2_fx.setText(pref.getString("feng_xiang_2", ""));
+		fore_date2_fl.setText(pref.getString("feng_li_2", ""));
+		
+		fore_date3.setText(pref.getString("publish_time_3", ""));
+		fore_date3_weather.setText(pref.getString("weatherDesp_3", ""));
+		fore_date3_temp1.setText(pref.getString("temp1_3", ""));
+		fore_date3_temp2.setText(pref.getString("temp2_3", ""));
+		fore_date3_fx.setText(pref.getString("feng_xiang_3", ""));
+		fore_date3_fl.setText(pref.getString("feng_li_3", ""));
+		
+		fore_date4.setText(pref.getString("publish_time_4", ""));
+		fore_date4_weather.setText(pref.getString("weatherDesp_4", ""));
+		fore_date4_temp1.setText(pref.getString("temp1_4", ""));
+		fore_date4_temp2.setText(pref.getString("temp2_4", ""));
+		fore_date4_fx.setText(pref.getString("feng_xiang_4", ""));
+		fore_date4_fl.setText(pref.getString("feng_li_4", ""));
 		
 //		currentDateText.setText(pref.getString("current_date", ""));
 		currentDate.setText(pref.getString("current_date", ""));
