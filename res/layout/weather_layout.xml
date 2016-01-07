@@ -37,7 +37,7 @@
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="4"
+        android:layout_weight="5"
         android:background="#999">
         
         <TextView 
@@ -63,9 +63,10 @@
             android:id="@+id/weather_info_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="30dp"
             android:orientation="vertical">
-            
+            <!-- 当前温度 -->
             <TextView 
                 android:id="@+id/temp_now"
                 android:layout_width="wrap_content"
@@ -74,8 +75,8 @@
                	android:layout_marginBottom="20dp"
                 android:gravity="center"
                 android:textColor="#FFF"
-            	android:textSize="60sp"/>
-            
+            	android:textSize="120sp"/>
+            <!-- 温度范围 -->
             <LinearLayout 
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -85,10 +86,10 @@
 	            <TextView 
 	                android:id="@+id/weather_desp"
 	                android:layout_width="wrap_content"
-	                android:layout_height="60dp"
+	                android:layout_height="wrap_content"
 	                android:layout_gravity="center_horizontal"
 	                android:textColor="#FFF"
-	            	android:textSize="18sp"/>
+	            	android:textSize="20sp"/>
 	            <TextView 
 	                android:id="@+id/temp1"
 	                android:layout_width="wrap_content"
@@ -96,37 +97,84 @@
 	                android:layout_gravity="center_horizontal"
 	                android:layout_marginLeft="20dp"
 	                android:textColor="#FFF"
-	            	android:textSize="18sp"/>
+	            	android:textSize="20sp"/>
                <TextView 
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_gravity="center_horizontal"
-	                android:layout_marginLeft="10dp"
-	                android:layout_marginRight="10dp"
+	                android:layout_marginLeft="5dp"
+	                android:layout_marginRight="5dp"
 	                android:text="~"
 	                android:textColor="#FFF"
-	            	android:textSize="18sp"/>
+	            	android:textSize="20sp"/>
                <TextView 
 	                android:id="@+id/temp2"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_gravity="center_horizontal"
 	                android:textColor="#FFF"
-	            	android:textSize="18sp"/>
+	            	android:textSize="20sp"/>
             </LinearLayout>
+            <!-- AQI/PM25指数 -->
             <LinearLayout 
                 android:layout_width="wrap_content"
-                android:layout_height="60dp"
-                android:layout_gravity="center_horizontal"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentLeft="true"
                 android:orientation="horizontal">
-                
+	            <TextView
+	                android:id="@+id/aqi_text"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:text="AQI : "
+		            android:textColor="#FFF"
+		           	android:textSize="15sp"/>
+	            <TextView
+	                android:id="@+id/aqi"
+		            android:layout_width="wrap_content"
+		            android:layout_height="wrap_content"
+		            android:layout_alignParentLeft="true"
+		            android:layout_marginTop="10dp"
+		            android:textColor="#FFF"
+		           	android:textSize="15sp"/>
+	            <LinearLayout 
+	                android:layout_width="wrap_content"
+	                android:layout_height="wrap_content"
+	                android:layout_gravity="center_horizontal"
+	                android:orientation="horizontal">
+		            <TextView
+		                android:id="@+id/pm25_text"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:layout_alignParentLeft="true"
+			            android:text="PM25 : "
+			            android:textColor="#FFF"
+			           	android:textSize="15sp"/>
+		            <TextView
+		                android:id="@+id/pm25"
+			            android:layout_width="wrap_content"
+			            android:layout_height="wrap_content"
+			            android:layout_alignParentLeft="true"
+			            android:layout_marginTop="10dp"
+			            android:textColor="#FFF"
+			           	android:textSize="15sp"/>
+		         </LinearLayout>
+	        </LinearLayout>
+            <!-- 风力风向 -->
+            <LinearLayout 
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_alignParentLeft="true"
+                android:orientation="horizontal">
                 <TextView 
                     android:id="@+id/feng_xiang"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
 	                android:textColor="#FFF"
-	            	android:textSize="18sp"/>
+	            	android:textSize="15sp"/>
                 <TextView 
                     android:id="@+id/feng_li"
                     android:layout_width="wrap_content"
@@ -134,7 +182,7 @@
                     android:layout_marginLeft="10dp"
                     android:layout_gravity="center_horizontal"
 	                android:textColor="#FFF"
-	            	android:textSize="18sp"/>
+	            	android:textSize="15sp"/>
             </LinearLayout>
             
         </LinearLayout>
@@ -145,12 +193,12 @@
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_marginBottom="10dp"
-        android:background="#999">
+        android:layout_weight="2"
+        android:background="@drawable/border">
         <LinearLayout 
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
             <RelativeLayout
                 android:layout_width="0dp"
@@ -165,6 +213,7 @@
 		                android:id="@+id/fore_date1"
 		                android:layout_width="wrap_content"
 		                android:layout_height="wrap_content"
+		                android:layout_marginTop="5dp"
 		                android:layout_gravity="center_horizontal"
 		                android:textSize="15sp"
 		                android:textColor="#FFF"/>
@@ -172,6 +221,7 @@
 		                android:id="@+id/fore_date1_weather"
 		                android:layout_width="wrap_content"
 		                android:layout_height="wrap_content"
+		                android:layout_marginTop="5dp"
 		                android:layout_gravity="center_horizontal"
 		                android:textSize="15sp"
 		                android:textColor="#FFF"/>
@@ -184,6 +234,7 @@
 		            <LinearLayout
 		             	android:layout_width="wrap_content"
 			            android:layout_height="wrap_content"
+			            android:layout_marginTop="5dp"
 			            android:layout_gravity="center_horizontal"
 			            android:orientation="horizontal">
 			             <TextView 
@@ -215,20 +266,20 @@
 		           <LinearLayout 
 		              android:layout_width="wrap_content"
 		              android:layout_height="wrap_content"
+		              android:layout_marginTop="5dp"
 		              android:layout_gravity="center_horizontal"
-		              android:orientation="horizontal">
-			            <TextView
+		              android:orientation="vertical">
+			            <!-- <TextView
 			                android:id="@+id/fore_date1_fx"
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
 			                android:layout_gravity="center_horizontal"
 			              	android:textColor="#FFF"
-			          		android:textSize="15sp"/>
+			          		android:textSize="15sp"/> -->
 			             <TextView 
 			                 android:id="@+id/fore_date1_fl"
 			                 android:layout_width="wrap_content"
 			                 android:layout_height="wrap_content"
-			                 android:layout_marginLeft="5dp"
 			                 android:layout_gravity="center_horizontal"
 			              	 android:textColor="#FFF"
 			          		 android:textSize="15sp"/>
@@ -249,6 +300,7 @@
 		               android:id="@+id/fore_date2"
 		               android:layout_width="wrap_content"
 		               android:layout_height="wrap_content"
+		               android:layout_marginTop="5dp"
 		               android:layout_gravity="center_horizontal"
 		               android:textSize="15sp"
 		               android:textColor="#FFF"/>
@@ -256,6 +308,7 @@
 		               android:id="@+id/fore_date2_weather"
 		               android:layout_width="wrap_content"
 		               android:layout_height="wrap_content"
+		               android:layout_marginTop="5dp"
 		               android:layout_gravity="center_horizontal"
 		               android:textSize="15sp"
 		               android:textColor="#FFF"/>
@@ -268,6 +321,7 @@
 		           <LinearLayout 
 			            android:layout_width="wrap_content"
 			            android:layout_height="wrap_content"
+			            android:layout_marginTop="5dp"
 			            android:layout_gravity="center_horizontal"
 			            android:orientation="horizontal">
 			            <TextView 
@@ -299,20 +353,20 @@
 		          <LinearLayout
 		               android:layout_width="wrap_content"
 		               android:layout_height="wrap_content"
+		               android:layout_marginTop="5dp"
 		               android:layout_gravity="center_horizontal"
-		               android:orientation="horizontal">
-			           <TextView 
+		               android:orientation="vertical">
+			           <!-- <TextView 
 			                android:id="@+id/fore_date2_fx"
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
 			                android:layout_gravity="center_horizontal"
 			             	android:textColor="#FFF"
 			         		android:textSize="15sp"/>
-			            <TextView 
+ -->			            <TextView 
 			                android:id="@+id/fore_date2_fl"
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
-			                android:layout_marginLeft="5dp"
 			                android:layout_gravity="center_horizontal"
 			             	android:textColor="#FFF"
 			         		android:textSize="15sp"/>
@@ -333,6 +387,7 @@
 		               android:id="@+id/fore_date3"
 		               android:layout_width="wrap_content"
 		               android:layout_height="wrap_content"
+		               android:layout_marginTop="5dp"
 		               android:layout_gravity="center_horizontal"
 		               android:textSize="15sp"
 		               android:textColor="#FFF"/>
@@ -340,6 +395,7 @@
 		               android:id="@+id/fore_date3_weather"
 		               android:layout_width="wrap_content"
 		               android:layout_height="wrap_content"
+		               android:layout_marginTop="5dp"
 		               android:layout_gravity="center_horizontal"
 		               android:textSize="15sp"
 		               android:textColor="#FFF"/>
@@ -352,6 +408,7 @@
 		           <LinearLayout 
 			            android:layout_width="wrap_content"
 			            android:layout_height="wrap_content"
+			            android:layout_marginTop="5dp"
 			            android:layout_gravity="center_horizontal"
 			            android:orientation="horizontal">
 			            <TextView 
@@ -383,20 +440,20 @@
 		          <LinearLayout
 		               android:layout_width="wrap_content"
 		               android:layout_height="wrap_content"
+		               android:layout_marginTop="5dp"
 		               android:layout_gravity="center_horizontal"
-		               android:orientation="horizontal">
-			           <TextView 
+		               android:orientation="vertical">
+			           <!-- <TextView 
 			                android:id="@+id/fore_date3_fx"
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
 			                android:layout_gravity="center_horizontal"
 			             	android:textColor="#FFF"
-			         		android:textSize="15sp"/>
+			         		android:textSize="15sp"/> -->
 			            <TextView 
 			                android:id="@+id/fore_date3_fl"
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
-			                android:layout_marginLeft="5dp"
 			                android:layout_gravity="center_horizontal"
 			             	android:textColor="#FFF"
 			         		android:textSize="15sp"/>
@@ -418,6 +475,7 @@
 		               android:id="@+id/fore_date4"
 		               android:layout_width="wrap_content"
 		               android:layout_height="wrap_content"
+		               android:layout_marginTop="5dp"
 		               android:layout_gravity="center_horizontal"
 		               android:textSize="15sp"
 		               android:textColor="#FFF"/>
@@ -425,6 +483,7 @@
 		               android:id="@+id/fore_date4_weather"
 		               android:layout_width="wrap_content"
 		               android:layout_height="wrap_content"
+		               android:layout_marginTop="5dp"
 		               android:layout_gravity="center_horizontal"
 		               android:textSize="15sp"
 		               android:textColor="#FFF"/>
@@ -437,6 +496,7 @@
 		           <LinearLayout 
 			            android:layout_width="wrap_content"
 			            android:layout_height="wrap_content"
+			            android:layout_marginTop="5dp"
 			            android:layout_gravity="center_horizontal"
 			            android:orientation="horizontal">
 			            <TextView 
@@ -468,20 +528,20 @@
 		          <LinearLayout
 		               android:layout_width="wrap_content"
 		               android:layout_height="wrap_content"
+		               android:layout_marginTop="5dp"
 		               android:layout_gravity="center_horizontal"
-		               android:orientation="horizontal">
-			           <TextView 
+		               android:orientation="vertical">
+			          <!--  <TextView 
 			                android:id="@+id/fore_date4_fx"
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
 			                android:layout_gravity="center_horizontal"
 			             	android:textColor="#FFF"
-			         		android:textSize="15sp"/>
+			         		android:textSize="15sp"/> -->
 			            <TextView 
 			                android:id="@+id/fore_date4_fl"
 			                android:layout_width="wrap_content"
 			                android:layout_height="wrap_content"
-			                android:layout_marginLeft="5dp"
 			                android:layout_gravity="center_horizontal"
 			             	android:textColor="#FFF"
 			         		android:textSize="15sp"/>
