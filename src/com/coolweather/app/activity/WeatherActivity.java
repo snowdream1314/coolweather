@@ -1,5 +1,8 @@
 package com.coolweather.app.activity;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+
 import com.coolweather.app.R;
 import com.coolweather.app.service.AutoUpdateService;
 import com.coolweather.app.util.HttpCallbackListener;
@@ -22,14 +25,16 @@ import android.widget.TextView;
 public class WeatherActivity extends Activity implements OnClickListener{
 	
 	private LinearLayout weatherInfoLayout, weather_forecast;
-	
 	//显示城市名
 	private TextView cityNameText;
 	
-	//显示AQI/PM@%指数
+	//显示AQI/PM25指数
 	private TextView aqi;
 	private TextView pm25;
 	
+	//感冒指数
+	private TextView ganMao_name;
+	private TextView ganMao_value;
 	//显示发布时间
 	private TextView publishText;
 	
@@ -83,6 +88,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		tempNow = (TextView) findViewById(R.id.temp_now);
 		fengXiang = (TextView) findViewById(R.id.feng_xiang);
 		fengLi = (TextView) findViewById(R.id.feng_li);
+		ganMao_name = (TextView) findViewById(R.id.zhishu_ganmao_name);
+		ganMao_value = (TextView) findViewById(R.id.zhishu_ganmao_value);
 		
 		fore_date1 = (TextView) findViewById(R.id.fore_date1);
 		fore_date1_weather = (TextView) findViewById(R.id.fore_date1_weather);
@@ -116,6 +123,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		currentDate = (TextView) findViewById(R.id.date);
 		switchCity = (Button) findViewById(R.id.switch_city);
 		refreshWeather = (Button) findViewById(R.id.refresh_weather);
+//		String countryName = getIntent().getStringExtra("country_name");
 		String countryCode = getIntent().getStringExtra("country_code");
 		if (!TextUtils.isEmpty(countryCode)) {
 			//有县级代号就去查询天气
@@ -142,8 +150,6 @@ public class WeatherActivity extends Activity implements OnClickListener{
 			break;
 		case R.id.refresh_weather:
 			publishText.setText("同步中···");
-//			currentDate.setVisibility(View.INVISIBLE);
-//			SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 //			String weatherCode = prefs.getString("weather_code", "");
 			String weatherCode = getIntent().getStringExtra("country_code");
 			if (!TextUtils.isEmpty(weatherCode)) {
@@ -163,10 +169,16 @@ public class WeatherActivity extends Activity implements OnClickListener{
 //	}
 	
 	//查询天气代号所对应的天气
-	private void queryWeatherInfo(String weatherCode) {
+	private void queryWeatherInfo(String countryCode) {
 //		String address = "http://www.weather.com.cn/adat/cityinfo/" + weatherCode + ".html";
 //		String address = "http://wthrcdn.etouch.cn/weather_mini?citykey=" + weatherCode;
-		String address = "http://wthrcdn.etouch.cn/WeatherApi?citykey=" + weatherCode;
+//		try {
+//			countryName = URLEncoder.encode(countryName, "UTF-8");
+//		} catch (UnsupportedEncodingException e) {
+//			e.printStackTrace();
+//		}
+//		String address = "http://wthrcdn.etouch.cn/WeatherApi?city=" + countryName;
+		String address = "http://wthrcdn.etouch.cn/WeatherApi?citykey=" + countryCode;
 		queryFromServer(address, "weatherCode");
 	}
 	
@@ -178,6 +190,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 				if ("weatherCode".equals(type)) {
 //					Utility.handleWeatherResponse(WeatherActivity.this, response);
 					Utility.handleWeatherXMLResponse(WeatherActivity.this, response);
+//					handleWeatherXMLResponse(WeatherActivity.this, response);
 					runOnUiThread(new Runnable() {
 						@Override
 						public void run() {
@@ -202,20 +215,19 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	//从SharedPreferences文件中读取存储的天气信息，并显示到界面
 	private void showWeather() { 
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+		
 		cityNameText.setText(pref.getString("city_name", ""));
 		aqi.setText(pref.getString("aqi", ""));
 		pm25.setText(pref.getString("pm25", ""));
-		fengXiang.setText(pref.getString("feng_xiang_0", ""));
-		fengLi.setText(pref.getString("feng_li_0", ""));
+		fengXiang.setText(pref.getString("feng_xiang", ""));
+		fengLi.setText(pref.getString("feng_li", ""));
 		tempNow.setText(pref.getString("tempNow", ""));
-//		temp1Text.setText(pref.getString("temp1_0", ""));
-//		temp2Text.setText(pref.getString("temp2_0", ""));
-//		weatherDespText.setText(pref.getString("weatherDesp_0", ""));
-//		publishText.setText("今天" + pref.getString("publish_time_0", "") + "发布");
 		temp1Text.setText(pref.getString("lowTemp_0", ""));
 		temp2Text.setText(pref.getString("highTemp_0", ""));
 		weatherDespText.setText(pref.getString("dayType_0", ""));
 		publishText.setText("今天" + pref.getString("updatetime", "") + "发布");
+		ganMao_name.setText(pref.getString("weatherZhiShu_name_0", "ganmao"));
+		ganMao_value.setText(pref.getString("weatherZhiShu_value_0", "ganmao"));
 		
 		fore_date1.setText(pref.getString("publish_time_1", ""));
 		fore_date1_weather.setText(pref.getString("weatherDesp_1", ""));
@@ -245,12 +257,11 @@ public class WeatherActivity extends Activity implements OnClickListener{
 //		fore_date4_fx.setText(pref.getString("feng_xiang_4", ""));
 		fore_date4_fl.setText(pref.getString("feng_li_4", ""));
 		
-//		currentDateText.setText(pref.getString("current_date", ""));
 		currentDate.setText(pref.getString("current_date", ""));
-//		currentDate.setVisibility(View.VISIBLE);
 		weatherInfoLayout.setVisibility(View.VISIBLE);
 		cityNameText.setVisibility(View.VISIBLE);
 		Intent intent = new Intent(this, AutoUpdateService.class);
 		startService(intent);
 	}
+	
 }

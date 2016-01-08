@@ -1,5 +1,7 @@
 package com.coolweather.app.util;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -7,6 +9,12 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -14,8 +22,6 @@ import com.coolweather.app.modle.City;
 import com.coolweather.app.modle.CoolWeatherDB;
 import com.coolweather.app.modle.Country;
 import com.coolweather.app.modle.Province;
-//import com.coolweather.app.util.Weather.forecast.weather.day;
-//import com.coolweather.app.util.Weather.forecast.weather.night;
 import com.google.gson.Gson;
 
 import android.content.Context;
@@ -26,15 +32,14 @@ import android.preference.PreferenceManager;
 public class Utility {
 	
 	private static String xmlData;
-//	private String itemCode;
-//	private static List<String> xmlDataList;
 	private static String xmlDatas;
 	private static WeatherZhiShu weatherZhiShu;
 	private static List<WeatherZhiShu> zhiShus;
 	private static Weather weather;
 	private static List<Weather> weatherList;
-//	private static String updateTime,fengXiang,fengLi,fengxiangXML,fengliXML,tempHigh,tempLow,weatherDesp,dateNow,
-//						  cityame,tempNow,aqi,sunrise_1,sunset_1;
+	private static List<String> weatherDatas;
+//	private static String updateTime,cityName,shidu,pm25,suggest,quality,fengXiang,fengLi,
+//						  tempNow,aqi,sunrise_1,sunset_1,MajorPollutants;
 	//天气生活指数类
 	public static class WeatherZhiShu {
 		private String name;
@@ -274,7 +279,7 @@ public class Utility {
 				String nodeName = xmlPullParser.getName();
 				switch (eventType) {
 				//开始解析节点
-				case XmlPullParser.START_TAG: {
+				case XmlPullParser.START_TAG: 
 					if ("d".equals(nodeName)) {
 						d1 = xmlPullParser.getAttributeValue(0);
 						d2 = xmlPullParser.getAttributeValue(1);
@@ -286,13 +291,13 @@ public class Utility {
 						}
 					}
 					break;
-				}
-				case XmlPullParser.END_TAG: {
+				
+				case XmlPullParser.END_TAG: 
 					if ("c".equals(nodeName)) {
 //						responseText.setText(texts);
 					}
 					break;
-				}
+				
 				default:
 					break;
 				}
@@ -305,24 +310,22 @@ public class Utility {
 	
 	//解析服务器返回的XML天气数据
 	public static void handleWeatherXMLResponse(Context context, String response) {
-		String cityName = null;
-		String updateTime=null;
-		String fengLi=null;
-		String fengXiang=null;
-//		String tempHigh = null;
-//		String tempLow = null;
-//		String weatherDay = null;
-//		String weatherNight = null;
-		String tempNow = null;
-		String aqi = null;
-		String shidu=null;
-		String sunrise_1=null;
-		String sunset_1=null;
-		String pm25=null;
-		String suggest=null;
-		String quality=null;
-		String MajorPollutants=null;
 		try {
+			String cityName = "";
+			String updateTime="";
+			String fengLi="";
+			String fengXiang="";
+			String tempNow = "";
+			String aqi = "";
+			String shidu="";
+			String sunrise_1="";
+			String sunset_1="";
+			String pm25="";
+			String suggest="";
+			String quality="";
+			String MajorPollutants="";
+			zhiShus = new ArrayList<WeatherZhiShu>(); 
+            weatherList = new ArrayList<Weather>();
 			XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
 			XmlPullParser xmlPullParser = factory.newPullParser();
 			xmlPullParser.setInput(new StringReader(response));
@@ -332,158 +335,202 @@ public class Utility {
 				switch (eventType) {
 				//开始解析XML节点
 				case XmlPullParser.START_DOCUMENT:  
-	                zhiShus = new ArrayList<WeatherZhiShu>(); 
-	                weatherList = new ArrayList<Weather>();
+//	                zhiShus = new ArrayList<WeatherZhiShu>(); 
+//	                weatherList = new ArrayList<Weather>();
+	                weatherDatas = new ArrayList<String>();
 	                break;  
-				case XmlPullParser.START_TAG: {
+				case XmlPullParser.START_TAG: 
 					if ("city".equals(nodeName)) {
-						cityName = xmlPullParser.getText();
-					}
-					if ("updatetime".equals(nodeName)) {
-						updateTime = xmlPullParser.getText();
-					}
-					if ("wendu".equals(nodeName)) {
-						tempNow = xmlPullParser.getText();
-					}
-					if ("fengli".equals(nodeName)) {
-						fengLi = xmlPullParser.getText();
-					}
-					if ("shidu".equals(nodeName)) {
-						shidu = xmlPullParser.getText();
-					}
-					if ("fengxiang".equals(nodeName)) {
-						fengXiang = xmlPullParser.getText();
-					}
-					if ("sunrise_1".equals(nodeName)) {
-						sunrise_1 = xmlPullParser.getText();
-						eventType = xmlPullParser.next();
-					}
-					if ("sunset_1".equals(nodeName)) {
-						sunset_1 = xmlPullParser.getText();
-					}
-					if ("aqi".equals(nodeName)) {
-						aqi = xmlPullParser.getText();
-					}
-					if ("pm25".equals(nodeName)) {
-						pm25 = xmlPullParser.getText();
-					}
-					if ("suggest".equals(nodeName)) {
-						suggest = xmlPullParser.getText();
-					}
-					if ("quality".equals(nodeName)) {
-						quality = xmlPullParser.getText();
-					}
-					if ("MajorPollutants".equals(nodeName)) {
-						MajorPollutants = xmlPullParser.getText();
+						cityName = xmlPullParser.nextText();
+						weatherDatas.add(cityName);
+					} else if ("updatetime".equals(nodeName)) {
+						updateTime = xmlPullParser.nextText();
+						weatherDatas.add(updateTime);
+					} else if ("wendu".equals(nodeName)) {
+						tempNow = xmlPullParser.nextText();
+						weatherDatas.add(tempNow);
+					} else if ("fengli".equals(nodeName)) {
+						fengLi = xmlPullParser.nextText();
+						weatherDatas.add(fengLi);
+					} else if ("shidu".equals(nodeName)) {
+						shidu = xmlPullParser.nextText();
+						weatherDatas.add(shidu);
+					} else if ("fengxiang".equals(nodeName)) {
+						fengXiang = xmlPullParser.nextText();
+						weatherDatas.add(fengXiang);
+					} else if ("sunrise_1".equals(nodeName)) {
+						sunrise_1 = xmlPullParser.nextText();
+						weatherDatas.add(sunrise_1);
+					} else if ("sunset_1".equals(nodeName)) {
+						sunset_1 = xmlPullParser.nextText();
+						weatherDatas.add(sunset_1);
+					} else if ("aqi".equals(nodeName)) {
+						aqi = xmlPullParser.nextText();
+						weatherDatas.add(aqi);
+					} else if ("pm25".equals(nodeName)) {
+						pm25 = xmlPullParser.nextText();
+						weatherDatas.add(pm25);
+					} else if ("suggest".equals(nodeName)) {
+						suggest = xmlPullParser.nextText();
+						weatherDatas.add(suggest);
+					} else if ("quality".equals(nodeName)) {
+						quality = xmlPullParser.nextText();
+						weatherDatas.add(quality);
+					} else if ("MajorPollutants".equals(nodeName)) {
+						MajorPollutants = xmlPullParser.nextText();
+						weatherDatas.add(MajorPollutants);
 					}
 					
-					if ("weather".equals(nodeName)) {
-						weather =new Weather();
-					} else if ("date".equals(nodeName)) {
-						weather.setDate(xmlPullParser.getText());
-						eventType = xmlPullParser.next();
-					} else if ("high".equals(nodeName)) {
-						weather.setHigh(xmlPullParser.getText());
-						eventType = xmlPullParser.next();
-					} else if ("low".equals(nodeName)) {
-						weather.setLow(xmlPullParser.getText());
-						eventType = xmlPullParser.next();
-					} else if ("day".equals(nodeName)) {
-						eventType = xmlPullParser.next();
-						if ("type".equals(nodeName)) {
-							weather.getDay().setType(xmlPullParser.getText());
-							eventType = xmlPullParser.next();
-						} else if ("fengxiang".equals(nodeName)) {
-							weather.getDay().setFengXiang(xmlPullParser.getText());
-							eventType = xmlPullParser.next();
-						} else if ("fengli".equals(nodeName)) {
-							weather.getDay().setFengLi(xmlPullParser.getText());
-							eventType = xmlPullParser.next();
-						}
-					} else if ("night".equals(nodeName)) {
-						eventType = xmlPullParser.next();
-						if ("type".equals(nodeName)) {
-							weather.getNight().setType(xmlPullParser.getText());
-							eventType = xmlPullParser.next();
-						} else if ("fengxiang".equals(nodeName)) {
-							weather.getNight().setFengXiang(xmlPullParser.getText());
-							eventType = xmlPullParser.next();
-						} else if ("fengli".equals(nodeName)) {
-							weather.getNight().setFengLi(xmlPullParser.getText());
-							eventType = xmlPullParser.next();
-						}
-					} 
+//					if ("weather".equals(nodeName)) {
+//						weather =new Weather();
+//					}
+//					if ("date".equals(nodeName)) {
+//						weather.setDate(xmlPullParser.nextText());
+//					}
+//					if ("high".equals(nodeName)) {
+//						weather.setHigh(xmlPullParser.nextText());
+//					}
+//					if ("low".equals(nodeName)) {
+//						weather.setLow(xmlPullParser.nextText());
+//					}
+//					if ("type".equals(nodeName)) {
+//						weather.getDay().setType(xmlPullParser.nextText());
+//					}
+//					if ("fengxiang".equals(nodeName)) {
+//						weather.getDay().setFengXiang(xmlPullParser.nextText());
+//					}
+//					if ("fengli".equals(nodeName)) {
+//						weather.getDay().setFengLi(xmlPullParser.nextText());
+//					}
+//					if ("type".equals(nodeName)) {
+//						weather.getNight().setType(xmlPullParser.nextText());
+//					}
+//					if ("fengxiang".equals(nodeName)) {
+//						weather.getNight().setFengXiang(xmlPullParser.nextText());
+//					}
+//					if ("fengli".equals(nodeName)) {
+//						weather.getNight().setFengLi(xmlPullParser.nextText());
+//					}
 					
 					if ("zhishu".equals(nodeName)) {
 						weatherZhiShu = new WeatherZhiShu();
-					} else if ("name".equals(nodeName)) {
-						weatherZhiShu.setName(xmlPullParser.getText());
-						eventType = xmlPullParser.next();
-					} else if ("value".equals(nodeName)) {
-						weatherZhiShu.setValue(xmlPullParser.getText());
-						eventType = xmlPullParser.next();
-					} else if ("detail".equals(nodeName)) {
-						weatherZhiShu.setDetail(xmlPullParser.getText());
-						eventType = xmlPullParser.next();
 					}
-					
+					if ("name".equals(nodeName)) {
+						weatherZhiShu.setName(xmlPullParser.nextText());
+					}
+					if ("value".equals(nodeName)) {
+						weatherZhiShu.setValue(xmlPullParser.nextText());
+					}
+					if ("detail".equals(nodeName)) {
+						weatherZhiShu.setDetail(xmlPullParser.nextText());
+					}
 					break; 
-				}
-				case XmlPullParser.END_TAG: {
-					if ("weather".equals(nodeName)) {
-						weatherList.add(weather);
-						weather = null;
-					}
-					
+				
+				case XmlPullParser.END_TAG: 
+//					if ("weather".equals(nodeName)) {
+//						weatherList.add(weather);
+//						weather = null;
+//					}
 					if ("zhishu".equals(nodeName)) {
 						zhiShus.add(weatherZhiShu);
 						weatherZhiShu = null;
 					}
+					if ("environment".equals(nodeName)) {
+						//将获得的数据存入SharedPreferences
+//						saveWeatherXml(context, cityName, updateTime, tempNow, fengLi, fengXiang, shidu, sunrise_1, 
+//								sunset_1, aqi, pm25, suggest, quality, MajorPollutants, weatherList, zhiShus);
+						saveWeatherXml(context, weatherDatas, weatherList, zhiShus);
+					}
 					break;
-				}
+				
 				default:
 					break;
 				}
 				eventType = xmlPullParser.next();
-				}
-			//将获得的数据存入SharedPreferences
-			SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-			editor.putString("city_name", cityName);
-			editor.putString("updatetime", updateTime);
-			editor.putString("tempNow", tempNow);
-			editor.putString("feng_li", fengLi);
-			editor.putString("feng_xiang", fengXiang);
-			editor.putString("shidu", shidu);
-			editor.putString("sunrise_1", sunrise_1);
-			editor.putString("sunset_1", sunset_1);
-			editor.putString("aqi", aqi);
-			editor.putString("pm25", pm25);
-			editor.putString("suggest", suggest);
-			editor.putString("quality", quality);
-			editor.putString("MajorPollutants", MajorPollutants);
-			for (int i=0; i<5; i++) {
-				editor.putString("date".concat("_" + Integer.toString(i)), weatherList.get(i).getDate());
-				editor.putString("highTemp".concat("_" + Integer.toString(i)), weatherList.get(i).getHigh());
-				editor.putString("lowTemp".concat("_" + Integer.toString(i)), weatherList.get(i).getLow());
-				editor.putString("dayType".concat("_" + Integer.toString(i)), weatherList.get(i).getDay().getType());
-				editor.putString("dayFengXiang".concat("_" + Integer.toString(i)), weatherList.get(i).getDay().getFengXiang());
-				editor.putString("dayFengLi".concat("_" + Integer.toString(i)), weatherList.get(i).getDay().getFengLi());
-				editor.putString("nightType".concat("_" + Integer.toString(i)), weatherList.get(i).getNight().getType());
-				editor.putString("nightFengXiang".concat("_" + Integer.toString(i)), weatherList.get(i).getNight().getFengXiang());
-				editor.putString("nightFengLi".concat("_" + Integer.toString(i)), weatherList.get(i).getNight().getFengLi());
 			}
-			for (int i=0; i<11; i++) {
-				editor.putString("weatherZhiShu_name".concat("_" + Integer.toString(i)), zhiShus.get(i).getName());
-				editor.putString("weatherZhiShu_value".concat("_" + Integer.toString(i)), zhiShus.get(i).getValue());
-				editor.putString("weatherZhiShu_detail".concat("_" + Integer.toString(i)), zhiShus.get(i).getDetail());
-			}
-			editor.commit();
+			//DOM法解析多层XML
+//			DocumentBuilderFactory factoryDom = DocumentBuilderFactory.newInstance();  //取得DocumentBuilderFactory实例  
+//	        DocumentBuilder builder = factoryDom.newDocumentBuilder(); //从factory获取DocumentBuilder实例  
+//	        InputStream inStream = new ByteArrayInputStream(response.getBytes());
+//	        Document doc = builder.parse(inStream);   //解析输入流 得到Document实例  
+//	        Element rootElement = doc.getDocumentElement(); 
+//	        NodeList items = rootElement.getElementsByTagName("weather");
+//	        for (int i=0; i<items.getLength(); i++) {
+//	        	weather =new Weather();
+//	        	Element weatherNode = (Element) items.item(i);
+//	        	weather.setDate(weatherNode.getFirstChild().getNodeValue());
+//	        	NodeList childNodes = weatherNode.getChildNodes();
+//	        	for (int j=0; j<childNodes.getLength(); j++) {
+//	        		weather.setHigh(childNodes.item(1).getNodeValue());
+//	        		weather.setLow(childNodes.item(2).getNodeValue());
+//	        		weather.getDay().setType(childNodes.item(3).getChildNodes().item(0).getNodeValue());
+//	        		weather.getDay().setFengXiang(childNodes.item(3).getChildNodes().item(1).getNodeValue());
+//	        		weather.getDay().setFengLi(childNodes.item(3).getChildNodes().item(2).getNodeValue());
+//	        		weather.getNight().setType(childNodes.item(4).getChildNodes().item(0).getNodeValue());
+//	        		weather.getNight().setFengXiang(childNodes.item(4).getChildNodes().item(1).getNodeValue());
+//	        		weather.getNight().setFengLi(childNodes.item(4).getChildNodes().item(2).getNodeValue());
+//	        	}
+//	        	weatherList.add(weather);
+//	        }
+//	        saveWeatherXml(context, weatherDatas, weatherList, zhiShus);
+//	        inStream.close();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
-		
 		}
-		
+	
+	//将服务器返回的所有XML天气信息存储到SharedPreferences文件中
+//	public static void saveWeatherXml(Context context, String cityName, String updateTime, String tempNow, String fengLi, 
+//			String fengXiang, String shidu, String sunrise_1, String sunset_1, String aqi, String pm25, String suggest,String quality,
+//			String MajorPollutants, List<Weather> weatherList, List<WeatherZhiShu> zhiShus) {
+	public static void saveWeatherXml(Context context, List<String> weatherDatas, List<Weather> weatherList, List<WeatherZhiShu> zhiShus) {	
+		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+		editor.putString("city_name", weatherDatas.get(0));
+		editor.putString("updatetime", weatherDatas.get(1));
+		editor.putString("tempNow", weatherDatas.get(2));
+		editor.putString("feng_li", weatherDatas.get(3));
+		editor.putString("shidu", weatherDatas.get(4));
+		editor.putString("feng_xiang", weatherDatas.get(5));
+		editor.putString("sunrise_1", weatherDatas.get(6));
+		editor.putString("sunset_1", weatherDatas.get(7));
+		editor.putString("aqi", weatherDatas.get(8));
+		editor.putString("pm25", weatherDatas.get(9));
+		editor.putString("suggest", weatherDatas.get(10));
+		editor.putString("quality", weatherDatas.get(11));
+		editor.putString("MajorPollutants", weatherDatas.get(12));
+		editor.commit();
+//		editor.putString("city_name", cityName);
+//		editor.putString("updatetime", updateTime);
+//		editor.putString("tempNow", tempNow);
+//		editor.putString("feng_li", fengLi);
+//		editor.putString("feng_xiang", fengXiang);
+//		editor.putString("shidu", shidu);
+//		editor.putString("sunrise_1", sunrise_1);
+//		editor.putString("sunset_1", sunset_1);
+//		editor.putString("aqi", aqi);
+//		editor.putString("pm25", pm25);
+//		editor.putString("suggest", suggest);
+//		editor.putString("quality", quality);
+//		editor.putString("MajorPollutants", MajorPollutants);
+//		for (int i=0; i<5; i++) {
+//			editor.putString("date".concat("_" + Integer.toString(i)), weatherList.get(i).getDate());
+//			editor.putString("highTemp".concat("_" + Integer.toString(i)), weatherList.get(i).getHigh());
+//			editor.putString("lowTemp".concat("_" + Integer.toString(i)), weatherList.get(i).getLow());
+//			editor.putString("dayType".concat("_" + Integer.toString(i)), weatherList.get(i).getDay().getType());
+//			editor.putString("dayFengXiang".concat("_" + Integer.toString(i)), weatherList.get(i).getDay().getFengXiang());
+//			editor.putString("dayFengLi".concat("_" + Integer.toString(i)), weatherList.get(i).getDay().getFengLi());
+//			editor.putString("nightType".concat("_" + Integer.toString(i)), weatherList.get(i).getNight().getType());
+//			editor.putString("nightFengXiang".concat("_" + Integer.toString(i)), weatherList.get(i).getNight().getFengXiang());
+//			editor.putString("nightFengLi".concat("_" + Integer.toString(i)), weatherList.get(i).getNight().getFengLi());
+//		}
+		for (int i=0; i<11; i++) {
+			editor.putString("weatherZhiShu_name".concat("_" + Integer.toString(i)), zhiShus.get(i).getName());
+			editor.putString("weatherZhiShu_value".concat("_" + Integer.toString(i)), zhiShus.get(i).getValue());
+			editor.putString("weatherZhiShu_detail".concat("_" + Integer.toString(i)), zhiShus.get(i).getDetail());
+		}
+		editor.commit();
+	}
+	
 	//解析服务器返回的JSON数据，并存储到本地
 //	public static void handleWeatherResponse(Context context, String response) {
 //		try {
