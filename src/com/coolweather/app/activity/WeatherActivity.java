@@ -31,15 +31,20 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	//显示AQI/PM25指数
 	private TextView aqi;
 	private TextView pm25;
+	private TextView quality;
 	
 	//感冒指数
-	private TextView ganMao_name;
-	private TextView ganMao_value;
+//	private TextView suggest;
+	private TextView ganMao;
+	
 	//显示发布时间
 	private TextView publishText;
 	
 	//显示天气描述信息
 	private TextView weatherDespText;
+	private TextView shidu;
+	private TextView sunRise;
+	private TextView sunSet;
 	
 	//显示当前温度
 	private TextView tempNow;
@@ -48,10 +53,8 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	private TextView fengXiang;
 	private TextView fengLi;
 	
-	//显示气温1
+	//显示气温
 	private TextView temp1Text;
-	
-	//显示气温2
 	private TextView temp2Text;
 	
 	//显示当前日期
@@ -88,8 +91,13 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		tempNow = (TextView) findViewById(R.id.temp_now);
 		fengXiang = (TextView) findViewById(R.id.feng_xiang);
 		fengLi = (TextView) findViewById(R.id.feng_li);
-		ganMao_name = (TextView) findViewById(R.id.zhishu_ganmao_name);
-		ganMao_value = (TextView) findViewById(R.id.zhishu_ganmao_value);
+		shidu = (TextView) findViewById(R.id.shidu_value);
+		quality = (TextView) findViewById(R.id.quality);
+		sunRise = (TextView) findViewById(R.id.sunrise_time);
+		sunSet = (TextView) findViewById(R.id.sunset_time);
+		ganMao = (TextView) findViewById(R.id.ganmao);
+//		ganMao_name = (TextView) findViewById(R.id.zhishu_ganmao_name);
+//		ganMao_value = (TextView) findViewById(R.id.zhishu_ganmao_value);
 		
 		fore_date1 = (TextView) findViewById(R.id.fore_date1);
 		fore_date1_weather = (TextView) findViewById(R.id.fore_date1_weather);
@@ -171,15 +179,16 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	//查询天气代号所对应的天气
 	private void queryWeatherInfo(String countryCode) {
 //		String address = "http://www.weather.com.cn/adat/cityinfo/" + weatherCode + ".html";
-//		String address = "http://wthrcdn.etouch.cn/weather_mini?citykey=" + weatherCode;
+		String address1 = "http://wthrcdn.etouch.cn/weather_mini?citykey=" + countryCode;
 //		try {
 //			countryName = URLEncoder.encode(countryName, "UTF-8");
 //		} catch (UnsupportedEncodingException e) {
 //			e.printStackTrace();
 //		}
 //		String address = "http://wthrcdn.etouch.cn/WeatherApi?city=" + countryName;
-		String address = "http://wthrcdn.etouch.cn/WeatherApi?citykey=" + countryCode;
-		queryFromServer(address, "weatherCode");
+		String address2 = "http://wthrcdn.etouch.cn/WeatherApi?citykey=" + countryCode;
+		queryFromServer(address1, "weatherCode1");
+		queryFromServer(address2, "weatherCode2");
 	}
 	
 	//根据传入的地址和类型去服务器查询天气代号或天气信息
@@ -187,17 +196,19 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
 			@Override
 			public void onFinish(final String response) {
-				if ("weatherCode".equals(type)) {
-//					Utility.handleWeatherResponse(WeatherActivity.this, response);
-					Utility.handleWeatherXMLResponse(WeatherActivity.this, response);
-//					handleWeatherXMLResponse(WeatherActivity.this, response);
-					runOnUiThread(new Runnable() {
-						@Override
-						public void run() {
-							showWeather();
-						}
-					});
+				if ("weatherCode1".equals(type)) {
+					Utility.handleWeatherResponse(WeatherActivity.this, response);
 				}
+				if ("weatherCode2".equals(type)) {
+					Utility.handleWeatherXMLResponse(WeatherActivity.this, response);
+				}
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						showWeather();
+					}
+				});	
+				
 			}
 			
 			@Override
@@ -219,15 +230,22 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		cityNameText.setText(pref.getString("city_name", ""));
 		aqi.setText(pref.getString("aqi", ""));
 		pm25.setText(pref.getString("pm25", ""));
-		fengXiang.setText(pref.getString("feng_xiang", ""));
-		fengLi.setText(pref.getString("feng_li", ""));
+		fengXiang.setText(pref.getString("feng_xiang_0", ""));
+		fengLi.setText(pref.getString("feng_li_0", ""));
 		tempNow.setText(pref.getString("tempNow", ""));
-		temp1Text.setText(pref.getString("lowTemp_0", ""));
-		temp2Text.setText(pref.getString("highTemp_0", ""));
-		weatherDespText.setText(pref.getString("dayType_0", ""));
+		shidu.setText(pref.getString("shidu", ""));
+		quality.setText(pref.getString("quality", ""));
+		sunRise.setText(pref.getString("sunrise_1", ""));
+		sunSet.setText(pref.getString("sunset_1", ""));
+		ganMao.setText(pref.getString("ganmao", ""));
+//		temp1Text.setText(pref.getString("lowTemp_0", ""));
+//		temp2Text.setText(pref.getString("highTemp_0", ""));
+		weatherDespText.setText(pref.getString("weatherDesp_0", ""));
 		publishText.setText("今天" + pref.getString("updatetime", "") + "发布");
-		ganMao_name.setText(pref.getString("weatherZhiShu_name_0", "ganmao"));
-		ganMao_value.setText(pref.getString("weatherZhiShu_value_0", "ganmao"));
+		temp1Text.setText(pref.getString("temp1_0", ""));
+		temp2Text.setText(pref.getString("temp2_0", ""));
+//		ganMao_name.setText(pref.getString("weatherZhiShu_name_0", "ganmao"));
+//		ganMao_value.setText(pref.getString("weatherZhiShu_value_0", "ganmao"));
 		
 		fore_date1.setText(pref.getString("publish_time_1", ""));
 		fore_date1_weather.setText(pref.getString("weatherDesp_1", ""));

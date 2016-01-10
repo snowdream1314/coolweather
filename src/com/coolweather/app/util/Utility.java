@@ -343,40 +343,52 @@ public class Utility {
 					if ("city".equals(nodeName)) {
 						cityName = xmlPullParser.nextText();
 						weatherDatas.add(cityName);
-					} else if ("updatetime".equals(nodeName)) {
+					}
+					if ("updatetime".equals(nodeName)) {
 						updateTime = xmlPullParser.nextText();
 						weatherDatas.add(updateTime);
-					} else if ("wendu".equals(nodeName)) {
+					}
+					if ("wendu".equals(nodeName)) {
 						tempNow = xmlPullParser.nextText();
 						weatherDatas.add(tempNow);
-					} else if ("fengli".equals(nodeName)) {
+					}
+					if ("fengli".equals(nodeName)) {
 						fengLi = xmlPullParser.nextText();
 						weatherDatas.add(fengLi);
-					} else if ("shidu".equals(nodeName)) {
+					}
+					if ("shidu".equals(nodeName)) {
 						shidu = xmlPullParser.nextText();
 						weatherDatas.add(shidu);
-					} else if ("fengxiang".equals(nodeName)) {
+					}
+					if ("fengxiang".equals(nodeName)) {
 						fengXiang = xmlPullParser.nextText();
 						weatherDatas.add(fengXiang);
-					} else if ("sunrise_1".equals(nodeName)) {
+					}
+					if ("sunrise_1".equals(nodeName)) {
 						sunrise_1 = xmlPullParser.nextText();
 						weatherDatas.add(sunrise_1);
-					} else if ("sunset_1".equals(nodeName)) {
+					}
+					if ("sunset_1".equals(nodeName)) {
 						sunset_1 = xmlPullParser.nextText();
 						weatherDatas.add(sunset_1);
-					} else if ("aqi".equals(nodeName)) {
+					}
+					if ("aqi".equals(nodeName)) {
 						aqi = xmlPullParser.nextText();
 						weatherDatas.add(aqi);
-					} else if ("pm25".equals(nodeName)) {
+					}
+					if ("pm25".equals(nodeName)) {
 						pm25 = xmlPullParser.nextText();
 						weatherDatas.add(pm25);
-					} else if ("suggest".equals(nodeName)) {
+					}
+					if ("suggest".equals(nodeName)) {
 						suggest = xmlPullParser.nextText();
 						weatherDatas.add(suggest);
-					} else if ("quality".equals(nodeName)) {
+					}
+					if ("quality".equals(nodeName)) {
 						quality = xmlPullParser.nextText();
 						weatherDatas.add(quality);
-					} else if ("MajorPollutants".equals(nodeName)) {
+					}
+					if ("MajorPollutants".equals(nodeName)) {
 						MajorPollutants = xmlPullParser.nextText();
 						weatherDatas.add(MajorPollutants);
 					}
@@ -412,18 +424,18 @@ public class Utility {
 //						weather.getNight().setFengLi(xmlPullParser.nextText());
 //					}
 					
-					if ("zhishu".equals(nodeName)) {
-						weatherZhiShu = new WeatherZhiShu();
-					}
-					if ("name".equals(nodeName)) {
-						weatherZhiShu.setName(xmlPullParser.nextText());
-					}
-					if ("value".equals(nodeName)) {
-						weatherZhiShu.setValue(xmlPullParser.nextText());
-					}
-					if ("detail".equals(nodeName)) {
-						weatherZhiShu.setDetail(xmlPullParser.nextText());
-					}
+//					if ("zhishu".equals(nodeName)) {
+//						weatherZhiShu = new WeatherZhiShu();
+//					}
+//					if ("name".equals(nodeName)) {
+//						weatherZhiShu.setName(xmlPullParser.nextText());
+//					}
+//					if ("value".equals(nodeName)) {
+//						weatherZhiShu.setValue(xmlPullParser.nextText());
+//					}
+//					if ("detail".equals(nodeName)) {
+//						weatherZhiShu.setDetail(xmlPullParser.nextText());
+//					}
 					break; 
 				
 				case XmlPullParser.END_TAG: 
@@ -431,10 +443,10 @@ public class Utility {
 //						weatherList.add(weather);
 //						weather = null;
 //					}
-					if ("zhishu".equals(nodeName)) {
-						zhiShus.add(weatherZhiShu);
-						weatherZhiShu = null;
-					}
+//					if ("zhishu".equals(nodeName)) {
+//						zhiShus.add(weatherZhiShu);
+//						weatherZhiShu = null;
+//					}
 					if ("environment".equals(nodeName)) {
 						//将获得的数据存入SharedPreferences
 //						saveWeatherXml(context, cityName, updateTime, tempNow, fengLi, fengXiang, shidu, sunrise_1, 
@@ -485,15 +497,15 @@ public class Utility {
 //			String MajorPollutants, List<Weather> weatherList, List<WeatherZhiShu> zhiShus) {
 	public static void saveWeatherXml(Context context, List<String> weatherDatas, List<Weather> weatherList, List<WeatherZhiShu> zhiShus) {	
 		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-		editor.putString("city_name", weatherDatas.get(0));
+//		editor.putString("city_name", weatherDatas.get(0));
 		editor.putString("updatetime", weatherDatas.get(1));
-		editor.putString("tempNow", weatherDatas.get(2));
-		editor.putString("feng_li", weatherDatas.get(3));
+//		editor.putString("tempNow", weatherDatas.get(2));
+//		editor.putString("feng_li", weatherDatas.get(3));
 		editor.putString("shidu", weatherDatas.get(4));
-		editor.putString("feng_xiang", weatherDatas.get(5));
+//		editor.putString("feng_xiang", weatherDatas.get(5));
 		editor.putString("sunrise_1", weatherDatas.get(6));
 		editor.putString("sunset_1", weatherDatas.get(7));
-		editor.putString("aqi", weatherDatas.get(8));
+//		editor.putString("aqi", weatherDatas.get(8));
 		editor.putString("pm25", weatherDatas.get(9));
 		editor.putString("suggest", weatherDatas.get(10));
 		editor.putString("quality", weatherDatas.get(11));
@@ -523,12 +535,12 @@ public class Utility {
 //			editor.putString("nightFengXiang".concat("_" + Integer.toString(i)), weatherList.get(i).getNight().getFengXiang());
 //			editor.putString("nightFengLi".concat("_" + Integer.toString(i)), weatherList.get(i).getNight().getFengLi());
 //		}
-		for (int i=0; i<11; i++) {
-			editor.putString("weatherZhiShu_name".concat("_" + Integer.toString(i)), zhiShus.get(i).getName());
-			editor.putString("weatherZhiShu_value".concat("_" + Integer.toString(i)), zhiShus.get(i).getValue());
-			editor.putString("weatherZhiShu_detail".concat("_" + Integer.toString(i)), zhiShus.get(i).getDetail());
-		}
-		editor.commit();
+//		for (int i=0; i<11; i++) {
+//			editor.putString("weatherZhiShu_name".concat("_" + Integer.toString(i)), zhiShus.get(i).getName());
+//			editor.putString("weatherZhiShu_value".concat("_" + Integer.toString(i)), zhiShus.get(i).getValue());
+//			editor.putString("weatherZhiShu_detail".concat("_" + Integer.toString(i)), zhiShus.get(i).getDetail());
+//		}
+//		editor.commit();
 	}
 	
 	//解析服务器返回的JSON数据，并存储到本地
@@ -550,7 +562,7 @@ public class Utility {
 	
 	//解析服务器返回的JSON数据，并存储到本地
 	public static void handleWeatherResponse(Context context, String response) {
-		String fengXiang,fengLi,tempHigh,tempLow,weatherDesp,dateNow,cityName,tempNow,aqi;
+		String fengXiang,fengLi,tempHigh,tempLow,weatherDesp,dateNow,cityName,tempNow,aqi,ganmao;
 		Gson gson = new Gson();
 		JsonBean jsonBean = gson.fromJson(response, JsonBean.class);
 		//获取当天天气信息
@@ -558,6 +570,7 @@ public class Utility {
 			cityName = jsonBean.getData().getCity();
 			tempNow = jsonBean.getData().getWenDU().concat("°");
 			aqi = jsonBean.getData().getAqi();
+			ganmao = jsonBean.getData().getGanMao();
 			for (int i=0; i<5; i++) {
 				fengXiang = jsonBean.getData().getForecast().get(i).getFengXiang();
 				fengLi = jsonBean.getData().getForecast().get(i).getFengLi();
@@ -568,7 +581,7 @@ public class Utility {
 				tempLow = jsonBean.getData().getForecast().get(i).getLow().replace("低温 ", "");
 				weatherDesp = jsonBean.getData().getForecast().get(i).getType();
 				dateNow = jsonBean.getData().getForecast().get(i).getDate();
-				saveWeatherInfo(context, cityName, aqi, tempNow, fengXiang, fengLi, tempHigh, tempLow, weatherDesp, dateNow, i);
+				saveWeatherInfo(context, cityName, aqi, ganmao, tempNow, fengXiang, fengLi, tempHigh, tempLow, weatherDesp, dateNow, i);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -577,12 +590,13 @@ public class Utility {
 	
 	
 	//将服务器返回的所有天气信息存储到SharedPreferences文件中
-	public static void saveWeatherInfo(Context context, String cityName, String aqi, String tempNow, String fengXiang, String fengLi, String tempHigh, String tempLow, String weatherDesp, String dateNow, int i) {
+	public static void saveWeatherInfo(Context context, String cityName, String aqi, String ganmao, String tempNow, String fengXiang, String fengLi, String tempHigh, String tempLow, String weatherDesp, String dateNow, int i) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
 		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 		editor.putBoolean("city_selected", true);
 		editor.putString("city_name", cityName);
 		editor.putString("aqi", aqi);
+		editor.putString("ganmao", ganmao);
 //		editor.putString("weather_code", weatherCode);
 		editor.putString("weather_code", "");
 		editor.putString("tempNow", tempNow);
