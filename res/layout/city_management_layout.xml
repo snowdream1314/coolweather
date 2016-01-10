@@ -1,0 +1,41 @@
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+    
+    <RelativeLayout 
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:background="#333">
+        <TextView
+            android:id="@+id/back" 
+            android:clickable="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="20dp"
+            android:text="返回"
+            android:textSize="20sp"
+            android:textColor="#FFF" />
+       <TextView
+           android:id="@+id/add" 
+           android:clickable="true"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_centerVertical="true"
+           android:layout_alignParentRight="true"
+           android:layout_marginRight="20dp"
+           android:text="+"
+           android:textSize="30sp"
+           android:textColor="#FFF" />
+    </RelativeLayout>
+	<ListView
+	    android:id="@+id/city_list" 
+	    android:layout_width="match_parent"
+	    android:layout_height="wrap_content"
+	    android:background="#333">
+	    
+	</ListView>
+</LinearLayout>

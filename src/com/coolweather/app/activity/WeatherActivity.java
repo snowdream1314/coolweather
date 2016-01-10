@@ -73,11 +73,13 @@ public class WeatherActivity extends Activity implements OnClickListener{
 					 fore_date3,fore_date3_weather,fore_date3_temp1,fore_date3_temp2,fore_date3_fx,fore_date3_fl,
 					 fore_date4,fore_date4_weather,fore_date4_temp1,fore_date4_temp2,fore_date4_fx,fore_date4_fl;
 	
+	private SharedPreferences pref;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.weather_layout);
+		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		//初始化各控件
 		weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
 //		weather_forecast = (LinearLayout) findViewById(R.id.weather_forecast);
@@ -96,8 +98,6 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		sunRise = (TextView) findViewById(R.id.sunrise_time);
 		sunSet = (TextView) findViewById(R.id.sunset_time);
 		ganMao = (TextView) findViewById(R.id.ganmao);
-//		ganMao_name = (TextView) findViewById(R.id.zhishu_ganmao_name);
-//		ganMao_value = (TextView) findViewById(R.id.zhishu_ganmao_value);
 		
 		fore_date1 = (TextView) findViewById(R.id.fore_date1);
 		fore_date1_weather = (TextView) findViewById(R.id.fore_date1_weather);
@@ -151,8 +151,9 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.switch_city:
-			Intent intent = new Intent(this, ChooseAreaActivity.class);
-			intent.putExtra("from_weather_activity", true);
+//			Intent intent = new Intent(this, ChooseAreaActivity.class);
+			Intent intent = new Intent(this, ManageCityActivity.class);
+//			intent.putExtra("from_weather_activity", true);
 			startActivity(intent);
 			finish();
 			break;
@@ -171,20 +172,10 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		}
 	}
 	
-	//查询县级代号所对应的天气代号
-//	private void queryWeatherCode(String countryCode) {
-//		
-//	}
-	
 	//查询天气代号所对应的天气
 	private void queryWeatherInfo(String countryCode) {
 //		String address = "http://www.weather.com.cn/adat/cityinfo/" + weatherCode + ".html";
 		String address1 = "http://wthrcdn.etouch.cn/weather_mini?citykey=" + countryCode;
-//		try {
-//			countryName = URLEncoder.encode(countryName, "UTF-8");
-//		} catch (UnsupportedEncodingException e) {
-//			e.printStackTrace();
-//		}
 //		String address = "http://wthrcdn.etouch.cn/WeatherApi?city=" + countryName;
 		String address2 = "http://wthrcdn.etouch.cn/WeatherApi?citykey=" + countryCode;
 		queryFromServer(address1, "weatherCode1");
@@ -225,7 +216,7 @@ public class WeatherActivity extends Activity implements OnClickListener{
 	
 	//从SharedPreferences文件中读取存储的天气信息，并显示到界面
 	private void showWeather() { 
-		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+//		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 		
 		cityNameText.setText(pref.getString("city_name", ""));
 		aqi.setText(pref.getString("aqi", ""));
@@ -238,14 +229,10 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		sunRise.setText(pref.getString("sunrise_1", ""));
 		sunSet.setText(pref.getString("sunset_1", ""));
 		ganMao.setText(pref.getString("ganmao", ""));
-//		temp1Text.setText(pref.getString("lowTemp_0", ""));
-//		temp2Text.setText(pref.getString("highTemp_0", ""));
 		weatherDespText.setText(pref.getString("weatherDesp_0", ""));
 		publishText.setText("今天" + pref.getString("updatetime", "") + "发布");
 		temp1Text.setText(pref.getString("temp1_0", ""));
 		temp2Text.setText(pref.getString("temp2_0", ""));
-//		ganMao_name.setText(pref.getString("weatherZhiShu_name_0", "ganmao"));
-//		ganMao_value.setText(pref.getString("weatherZhiShu_value_0", "ganmao"));
 		
 		fore_date1.setText(pref.getString("publish_time_1", ""));
 		fore_date1_weather.setText(pref.getString("weatherDesp_1", ""));

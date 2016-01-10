@@ -62,13 +62,17 @@ public class ChooseAreaActivity extends Activity {
 	//是否从weatherActivity跳转过来
 	private boolean isFromWeatherActivity;
 	
+	//是否从ManageCityActivity跳转过来
+	private boolean isFromManageCityActivity;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
+		isFromManageCityActivity = getIntent().getBooleanExtra("from_managecity_activity", false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
-		//已经选择了城市且不是从WeatherActivity跳转过来，才会直接跳到WeatherActivity
-		if (prefs.getBoolean("city_selected", false) && !isFromWeatherActivity) {
+		//已经选择了城市且不是从ManageCityActivity跳转过来，才会直接跳到WeatherActivity
+		if (prefs.getBoolean("city_selected", false) && !isFromManageCityActivity) {
 			Intent intent = new Intent(this, WeatherActivity.class);
 			startActivity(intent);
 			finish();
@@ -91,10 +95,11 @@ public class ChooseAreaActivity extends Activity {
 					selectedCity = cityList.get(index);
 					queryCountries();
 				} else if (currentLevel == LEVEL_COUNTRY) {
-//					String countryName = countryList.get(index).getCountryName();
+					String countryName = countryList.get(index).getCountryName();
 					String countryCode = countryList.get(index).getCountryCode();
-					Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
-//					intent.putExtra("country_name", countryName);
+//					Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
+					Intent intent = new Intent(ChooseAreaActivity.this, ManageCityActivity.class);
+					intent.putExtra("country_name", countryName);
 					intent.putExtra("country_code", countryCode);
 					startActivity(intent);
 					finish();

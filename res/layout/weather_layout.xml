@@ -336,8 +336,8 @@
 			              	android:layout_width="wrap_content"
 			              	android:layout_height="wrap_content"
 			              	android:layout_gravity="center_horizontal"
-			              	android:layout_marginLeft="5dp"
-			              	android:layout_marginRight="5dp"
+			              	android:layout_marginLeft="2dp"
+			              	android:layout_marginRight="2dp"
 			              	android:text="~"
 			              	android:textColor="#FFF"
 			          		android:textSize="15sp"/>
@@ -423,8 +423,8 @@
 				             android:layout_width="wrap_content"
 				             android:layout_height="wrap_content"
 				             android:layout_gravity="center_horizontal"
-				             android:layout_marginLeft="5dp"
-				             android:layout_marginRight="5dp"
+				             android:layout_marginLeft="2dp"
+				             android:layout_marginRight="2dp"
 				             android:text="~"
 				             android:textColor="#FFF"
 				         	 android:textSize="15sp"/>
@@ -510,8 +510,8 @@
 				             android:layout_width="wrap_content"
 				             android:layout_height="wrap_content"
 				             android:layout_gravity="center_horizontal"
-				             android:layout_marginLeft="5dp"
-				             android:layout_marginRight="5dp"
+				             android:layout_marginLeft="2dp"
+				             android:layout_marginRight="2dp"
 				             android:text="~"
 				             android:textColor="#FFF"
 				         	 android:textSize="15sp"/>
@@ -598,8 +598,8 @@
 				             android:layout_width="wrap_content"
 				             android:layout_height="wrap_content"
 				             android:layout_gravity="center_horizontal"
-				             android:layout_marginLeft="5dp"
-				             android:layout_marginRight="5dp"
+				             android:layout_marginLeft="2dp"
+				             android:layout_marginRight="2dp"
 				             android:text="~"
 				             android:textColor="#FFF"
 				         	 android:textSize="15sp"/>
