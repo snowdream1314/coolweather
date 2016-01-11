@@ -1,12 +1,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="horizontal" >
     
     <TextView 
         android:id="@+id/citylist_name"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="50dp"
+        android:layout_marginLeft="20dp"
+        android:layout_centerVertical="true"
+        android:textSize="20sp"
+        android:textColor="#FFF"/>
     <ImageView 
         android:id="@+id/citylist_image"
         android:layout_width="wrap_content"
@@ -14,10 +18,15 @@
      <TextView 
         android:id="@+id/citylist_weather"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:textSize="30sp"
+        android:textColor="#FFF"/>
      <TextView 
         android:id="@+id/citylist_temp"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:textColor="#FFF"/>
 
 </LinearLayout>

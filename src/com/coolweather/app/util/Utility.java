@@ -1,7 +1,5 @@
 package com.coolweather.app.util;
 
-import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -9,12 +7,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 

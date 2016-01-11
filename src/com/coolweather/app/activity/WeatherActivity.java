@@ -1,9 +1,11 @@
 package com.coolweather.app.activity;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.coolweather.app.R;
+import com.coolweather.app.modle.CoolWeatherDB;
 import com.coolweather.app.service.AutoUpdateService;
 import com.coolweather.app.util.HttpCallbackListener;
 import com.coolweather.app.util.HttpUtil;
@@ -15,6 +17,8 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
+import android.view.MotionEvent;
+import android.view.VelocityTracker;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -74,14 +78,50 @@ public class WeatherActivity extends Activity implements OnClickListener{
 					 fore_date4,fore_date4_weather,fore_date4_temp1,fore_date4_temp2,fore_date4_fx,fore_date4_fl;
 	
 	private SharedPreferences pref;
+	private LinearLayout weather_layout;
+	
+	//是否从ChooseAreaActivity跳转过来
+	private boolean isFromChooseAreaActivity;
+	
+	//监听手指滑动屏幕事件参数
+	private float xDown;
+	private float xUp;
+	private float xMove;
+	private int distanceX;
+	private int xSpeed;
+	private static final int XSPEED_MIN = 200;
+	private static final int XDISTANCE_MIN = 150;
+	private VelocityTracker mVelocityTracker;
+	//向左/右滑动次数
+	private int scollLeftNum;
+	private int scollRightNum;
+	private int choosedCountryNum;
+	
+	//选中的城市集合
+	private List<String> choosedCountryList = new ArrayList<String>();
+	private String choosedCountryCode;
+	private String choosedCountryName;
+//	private Set<String> choosedCountrySet = new LinkedHashSet<String>();
+	
+	//数据库
+	private CoolWeatherDB coolWeatherDB;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.weather_layout);
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
+		coolWeatherDB = CoolWeatherDB.getInstance(this);
+//		choosedCountryList = null;
+//		choosedCountryNum = choosedCountryList.size();
+//		scollLeftNum = 0;
+//		scollRightNum = 0;
+		
 		//初始化各控件
 		weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
+		weather_layout = (LinearLayout) findViewById(R.id.weather_layout);
+		
 //		weather_forecast = (LinearLayout) findViewById(R.id.weather_forecast);
 		cityNameText = (TextView) findViewById(R.id.city_name);
 		aqi = (TextView) findViewById(R.id.aqi);
@@ -131,31 +171,158 @@ public class WeatherActivity extends Activity implements OnClickListener{
 		currentDate = (TextView) findViewById(R.id.date);
 		switchCity = (Button) findViewById(R.id.switch_city);
 		refreshWeather = (Button) findViewById(R.id.refresh_weather);
-//		String countryName = getIntent().getStringExtra("country_name");
+		String countryName = getIntent().getStringExtra("country_name");
 		String countryCode = getIntent().getStringExtra("country_code");
+		isFromChooseAreaActivity = getIntent().getBooleanExtra("from_chooseArea_activity", false);
+		
 		if (!TextUtils.isEmpty(countryCode)) {
 			//有县级代号就去查询天气
 			publishText.setText("同步中···");
 			weatherInfoLayout.setVisibility(View.INVISIBLE);
 			cityNameText.setVisibility(View.INVISIBLE);
 			queryWeatherInfo(countryCode);
+//			choosedCountryList.add(countryCode);
 		} else {
 			//没有县级代号就直接显示本地天气
 			showWeather();
 		}
+		
+		//从ChooseAreaActivity跳转过来就要更新choosedCountryList
+		if (isFromChooseAreaActivity && !TextUtils.isEmpty(countryCode)) {
+			if (choosedCountryList.size() == 0) {
+				choosedCountryList.add(countryName);
+				choosedCountryList.add(countryCode);
+			} else if (!isCountryChoosed(countryCode)) {
+				choosedCountryList.add(countryName);
+				choosedCountryList.add(countryCode);
+			}
+		}
+		
 		switchCity.setOnClickListener(this);
 		refreshWeather.setOnClickListener(this);
+		
+		//设置手指滑动屏幕监听
+		weather_layout.setOnTouchListener(new View.OnTouchListener() {
+			
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// TODO Auto-generated method stub
+				createVelocityTracker(event);
+				switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					xDown = event.getRawX();
+					break;
+				case MotionEvent.ACTION_MOVE:
+					xMove = event.getRawX();
+					distanceX = (int) (xMove-xDown);//滑动的距离
+					xSpeed = getScrollVelocity();//获取顺时速度
+					break;
+				case MotionEvent.ACTION_UP:
+					xUp = event.getRawX();
+					if (distanceX > XDISTANCE_MIN && xSpeed > XSPEED_MIN) {
+						//向左滑动
+						if (xDown-xUp > 8) {
+//							scollLeftNum += 1;
+							choosedCountryName = cityNameText.getText().toString();
+//							int choosedCountryIndex = queryChoosedCountryIndex(choosedCountryName);
+//							if (choosedCountryIndex != choosedCountryList.size() && choosedCountryIndex != -1) {
+//								choosedCountryCode = choosedCountryList.get(choosedCountryIndex + 1);
+//								queryWeatherInfo(choosedCountryCode);
+//							}
+							int choosedCountryIndex = choosedCountryList.indexOf(choosedCountryName);
+							if (choosedCountryIndex < choosedCountryList.size()) {
+								choosedCountryCode = choosedCountryList.get(choosedCountryIndex + 3);
+								queryWeatherInfo(choosedCountryCode);
+							}
+						}
+						//向右滑动
+						if (xDown-xUp < 8) {
+//							scollRightNum +=1;
+							choosedCountryName = cityNameText.getText().toString();
+//							int choosedCountryIndex = queryChoosedCountryIndex(choosedCountryName);
+//							if (choosedCountryIndex != 0 && choosedCountryIndex != -1) {
+//								choosedCountryCode = choosedCountryList.get(choosedCountryIndex - 1);
+//								queryWeatherInfo(choosedCountryCode);
+//							}
+							int choosedCountryIndex = choosedCountryList.indexOf(choosedCountryName);
+							if (choosedCountryIndex < 0) {
+								choosedCountryCode = choosedCountryList.get(choosedCountryIndex - 1);
+								queryWeatherInfo(choosedCountryCode);
+							}
+						}
+					}
+					recycleVelocityTracker();
+					break;
+				default:
+					break;
+				}
+				return true;
+			}
+			
+			//创建VelocityTracker对象，并将触摸界面的滑动事件加入到VelocityTracker当中。
+			private void createVelocityTracker(MotionEvent event) {
+				if (mVelocityTracker == null) {
+					mVelocityTracker = VelocityTracker.obtain();
+				}
+				mVelocityTracker.addMovement(event);
+			}
+			
+			//回收VelocityTracker对象
+			private void recycleVelocityTracker() {
+				mVelocityTracker.recycle();
+				mVelocityTracker = null;
+			}
+			
+			//获取手指滑动的速度
+			private int getScrollVelocity() {
+				mVelocityTracker.computeCurrentVelocity(1000);//初始化速率单位为秒
+				int velocity = (int) mVelocityTracker.getXVelocity();
+				return Math.abs(velocity);
+			}
+			
+		});
 	}
 	
+	//判断城市是否已经选择过
+	private boolean isCountryChoosed(String countryCode) {
+		for (int i=1; i<choosedCountryList.size(); i+=2){
+			String code = choosedCountryList.get(i);
+			if (code.equals(countryCode)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	//根据城市名字查询choosedCountryList获取城市code
+	private String queryChoosedCountryCode(String countryName) {
+		for (int i=0; i<choosedCountryList.size(); i++) {
+			 if (choosedCountryList.get(i).startsWith(countryName)) {
+				 String choosedCountryCode = choosedCountryList.get(i).split("_")[-1];
+				 return choosedCountryCode;
+			 }
+		}
+		return null;
+	}
+	
+	private int queryChoosedCountryIndex(String countryName) {
+		for (int i=0; i<choosedCountryList.size(); i++) {
+			 if (choosedCountryList.get(i).startsWith(countryName)) {
+				 return i;
+			 }
+		}
+		return -1;
+	}
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.switch_city:
 //			Intent intent = new Intent(this, ChooseAreaActivity.class);
 			Intent intent = new Intent(this, ManageCityActivity.class);
-//			intent.putExtra("from_weather_activity", true);
+			intent.putExtra("from_weather_activity", true);
+			intent.putExtra("choosedCountryList", (Serializable)choosedCountryList);
 			startActivity(intent);
-			finish();
+//			finish();
 			break;
 		case R.id.refresh_weather:
 			publishText.setText("同步中···");

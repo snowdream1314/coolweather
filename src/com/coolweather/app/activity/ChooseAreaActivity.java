@@ -72,7 +72,7 @@ public class ChooseAreaActivity extends Activity {
 		isFromManageCityActivity = getIntent().getBooleanExtra("from_managecity_activity", false);
 		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
 		//已经选择了城市且不是从ManageCityActivity跳转过来，才会直接跳到WeatherActivity
-		if (prefs.getBoolean("city_selected", false) && !isFromManageCityActivity) {
+		if (prefs.getBoolean("city_selected", false) && !isFromWeatherActivity && !isFromManageCityActivity) {
 			Intent intent = new Intent(this, WeatherActivity.class);
 			startActivity(intent);
 			finish();
@@ -97,10 +97,12 @@ public class ChooseAreaActivity extends Activity {
 				} else if (currentLevel == LEVEL_COUNTRY) {
 					String countryName = countryList.get(index).getCountryName();
 					String countryCode = countryList.get(index).getCountryCode();
-//					Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
-					Intent intent = new Intent(ChooseAreaActivity.this, ManageCityActivity.class);
+					int cityId = countryList.get(index).getCityId();
+					Intent intent = new Intent(ChooseAreaActivity.this, WeatherActivity.class);
+//					Intent intent = new Intent(ChooseAreaActivity.this, ManageCityActivity.class);
 					intent.putExtra("country_name", countryName);
 					intent.putExtra("country_code", countryCode);
+//					intent.putExtra("city_id", cityId);
 					startActivity(intent);
 					finish();
 				}

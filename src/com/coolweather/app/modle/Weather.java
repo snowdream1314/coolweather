@@ -1,4 +1,4 @@
-package com.coolweather.app.util;
+package com.coolweather.app.modle;
 
 public class Weather {
 	private String city;

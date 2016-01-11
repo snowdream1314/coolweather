@@ -35,7 +35,7 @@
 	    android:id="@+id/city_list" 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
-	    android:background="#333">
+	    android:background="#555">
 	    
 	</ListView>
 </LinearLayout>

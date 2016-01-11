@@ -9,12 +9,12 @@ import com.coolweather.app.modle.CityListAdapter;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,7 +29,11 @@ public class ManageCityActivity extends Activity implements OnClickListener {
 	private ListView listView;
 	private CityListAdapter adapter;
 	private List<CityList> list = new ArrayList<CityList>();
+	private List<String> choosedCountryList = new ArrayList<String>();
 	
+	//是否从weatherActivity跳转过来
+	private boolean isFromWeatherActivity;
+		
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,18 +47,45 @@ public class ManageCityActivity extends Activity implements OnClickListener {
 		back = (TextView) findViewById(R.id.back);
 		add.setOnClickListener(this);
 		back.setOnClickListener(this);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View view, int index, long arg3) {
+				String country_code = list.get(index).getCode();
+				Intent intent = new Intent(ManageCityActivity.this, WeatherActivity.class);
+				intent.putExtra("country_code", country_code);
+				startActivity(intent);
+				finish();
+			}
+		});
+		
+		isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
+		if (isFromWeatherActivity) {
+			initCityList();
+		}
 	}
 	
-	private void initCityList() {
-		Intent intent = new Intent(this, ChooseAreaActivity.class);
-		city_name = intent.getStringExtra("country_name");
-		city_code = intent.getStringExtra("country_code");
-		citylist = new CityList();
-		citylist.setName(city_name);
-		list.add(citylist);
-		adapter.notifyDataSetChanged();
-		listView.setSelection(0);
+	@Override
+	protected void onStart() {
+		super.onStart();
+		initCityList();
 	}
+	
+	//更新已选城市列表
+	private void initCityList() {
+//		Intent intent = new Intent(this, ChooseAreaActivity.class);
+		choosedCountryList = (List<String>) this.getIntent().getSerializableExtra("choosedCountryList");
+		for (int i=0; i<choosedCountryList.size(); i+=2) {
+			city_name = choosedCountryList.get(i);
+			city_code = choosedCountryList.get(i+1);
+			citylist = new CityList();
+			citylist.setName(city_name);
+			citylist.setCode(city_code);
+			list.add(citylist);
+		}
+		adapter.notifyDataSetChanged();
+//		listView.setSelection(0);
+	}
+	
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -62,11 +93,22 @@ public class ManageCityActivity extends Activity implements OnClickListener {
 			Intent intent = new Intent(this, ChooseAreaActivity.class);
 			intent.putExtra("from_managecity_activity", true);
 			startActivity(intent);
+			finish();
 			break;
 		case R.id.back:
 			break;
 		default:
 			break;
+		}
+	}
+	
+	@Override
+	public void onBackPressed() {
+		if (getIntent().getBooleanExtra("from_weather_activity", false)) {
+			Intent intent = new Intent(ManageCityActivity.this, WeatherActivity.class);
+			intent.putExtra("from_managecity_activity", true);
+			startActivity(intent);
+			finish();
 		}
 	}
 }
