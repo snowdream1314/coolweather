@@ -102,6 +102,7 @@ public class ChooseAreaActivity extends Activity {
 //					Intent intent = new Intent(ChooseAreaActivity.this, ManageCityActivity.class);
 					intent.putExtra("country_name", countryName);
 					intent.putExtra("country_code", countryCode);
+					intent.putExtra("from_chooseArea_activity", true);
 //					intent.putExtra("city_id", cityId);
 					startActivity(intent);
 					finish();
