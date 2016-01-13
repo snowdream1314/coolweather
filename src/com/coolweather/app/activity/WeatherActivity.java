@@ -21,11 +21,10 @@ import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -103,14 +102,15 @@ public class WeatherActivity extends Activity {
 //	private int choosedCountryNum;
 	
 	//ViewPager
-	 ViewPager viewPager = null;
+	private ViewPager viewPager;
 	private MyPagerAdapter vpAdapter;
-	private List<View> views;
+	private ArrayList<View> views;
 	//选中的城市集合
 	private List<String> choosedCountryList = new ArrayList<String>();
 	private String choosedCountryCode;
 	private String choosedCountryName;
-	
+	private List<String> datas = new ArrayList<String>();
+	private String temp;
 	//数据库
 	private CoolWeatherDB coolWeatherDB;
 	
@@ -120,126 +120,102 @@ public class WeatherActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.view_pager);
+		
 		pref = PreferenceManager.getDefaultSharedPreferences(this);
 		
 //		coolWeatherDB = CoolWeatherDB.getInstance(this);
 //		choosedCountryList = null;
 //		choosedCountryNum = choosedCountryList.size();
 //		scollLeftNum = 0;
-//		scollRightNum = 0;
+//		scollRightNum = 0;s
 		
 		//初始化各控件
-//		weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
-//		weather_layout = (LinearLayout) findViewById(R.id.weather_layout);
-//		
-////		weather_forecast = (LinearLayout) findViewById(R.id.weather_forecast);
-//		cityNameText = (TextView) findViewById(R.id.city_name);
-//		aqi = (TextView) findViewById(R.id.aqi);
-//		pm25 = (TextView) findViewById(R.id.pm25);
-//		publishText = (TextView) findViewById(R.id.publish_text);
-//		weatherDespText = (TextView) findViewById(R.id.weather_desp);
-//		temp1Text = (TextView) findViewById(R.id.temp1);
-//		temp2Text = (TextView) findViewById(R.id.temp2);
-//		tempNow = (TextView) findViewById(R.id.temp_now);
-//		fengXiang = (TextView) findViewById(R.id.feng_xiang);
-//		fengLi = (TextView) findViewById(R.id.feng_li);
-//		shidu = (TextView) findViewById(R.id.shidu_value);
-//		quality = (TextView) findViewById(R.id.quality);
-//		sunRise = (TextView) findViewById(R.id.sunrise_time);
-//		sunSet = (TextView) findViewById(R.id.sunset_time);
-//		ganMao = (TextView) findViewById(R.id.ganmao);
-//		
-//		fore_date1 = (TextView) findViewById(R.id.fore_date1);
-//		fore_date1_weather = (TextView) findViewById(R.id.fore_date1_weather);
-//		fore_date1_temp1 = (TextView) findViewById(R.id.fore_date1_temp1);
-//		fore_date1_temp2 = (TextView) findViewById(R.id.fore_date1_temp2);
-////		fore_date1_fx = (TextView) findViewById(R.id.fore_date1_fx);
-//		fore_date1_fl = (TextView) findViewById(R.id.fore_date1_fl);
-//		
-//		fore_date2 = (TextView) findViewById(R.id.fore_date2);
-//		fore_date2_weather = (TextView) findViewById(R.id.fore_date2_weather);
-//		fore_date2_temp1 = (TextView) findViewById(R.id.fore_date2_temp1);
-//		fore_date2_temp2 = (TextView) findViewById(R.id.fore_date2_temp2);
-////		fore_date2_fx = (TextView) findViewById(R.id.fore_date2_fx);
-//		fore_date2_fl = (TextView) findViewById(R.id.fore_date2_fl);
-//		
-//		fore_date3 = (TextView) findViewById(R.id.fore_date3);
-//		fore_date3_weather = (TextView) findViewById(R.id.fore_date3_weather);
-//		fore_date3_temp1 = (TextView) findViewById(R.id.fore_date3_temp1);
-//		fore_date3_temp2 = (TextView) findViewById(R.id.fore_date3_temp2);
-////		fore_date3_fx = (TextView) findViewById(R.id.fore_date3_fx);
-//		fore_date3_fl = (TextView) findViewById(R.id.fore_date3_fl);
-//		
-//		fore_date4 = (TextView) findViewById(R.id.fore_date4);
-//		fore_date4_weather = (TextView) findViewById(R.id.fore_date4_weather);
-//		fore_date4_temp1 = (TextView) findViewById(R.id.fore_date4_temp1);
-//		fore_date4_temp2 = (TextView) findViewById(R.id.fore_date4_temp2);
-////		fore_date4_fx = (TextView) findViewById(R.id.fore_date4_fx);
-//		fore_date4_fl = (TextView) findViewById(R.id.fore_date4_fl);
-//		
-////		currentDateText = (TextView) findViewById(R.id.current_date);
-//		currentDate = (TextView) findViewById(R.id.date);
-//		switchCity = (Button) findViewById(R.id.switch_city);
-//		refreshWeather = (Button) findViewById(R.id.refresh_weather);
-//		String countryName = getIntent().getStringExtra("country_name");
-//		String countryCode = getIntent().getStringExtra("country_code");
+		weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
+		weather_layout = (LinearLayout) findViewById(R.id.weather_layout);
+		
+//		weather_forecast = (LinearLayout) findViewById(R.id.weather_forecast);
+		cityNameText = (TextView) findViewById(R.id.city_name);
+		aqi = (TextView) findViewById(R.id.aqi);
+		pm25 = (TextView) findViewById(R.id.pm25);
+		publishText = (TextView) findViewById(R.id.publish_text);
+		weatherDespText = (TextView) findViewById(R.id.weather_desp);
+		temp1Text = (TextView) findViewById(R.id.temp1);
+		temp2Text = (TextView) findViewById(R.id.temp2);
+		tempNow = (TextView) findViewById(R.id.temp_now);
+		fengXiang = (TextView) findViewById(R.id.feng_xiang);
+		fengLi = (TextView) findViewById(R.id.feng_li);
+		shidu = (TextView) findViewById(R.id.shidu_value);
+		quality = (TextView) findViewById(R.id.quality);
+		sunRise = (TextView) findViewById(R.id.sunrise_time);
+		sunSet = (TextView) findViewById(R.id.sunset_time);
+		ganMao = (TextView) findViewById(R.id.ganmao);
+		
+		fore_date1 = (TextView) findViewById(R.id.fore_date1);
+		fore_date1_weather = (TextView) findViewById(R.id.fore_date1_weather);
+		fore_date1_temp1 = (TextView) findViewById(R.id.fore_date1_temp1);
+		fore_date1_temp2 = (TextView) findViewById(R.id.fore_date1_temp2);
+//		fore_date1_fx = (TextView) findViewById(R.id.fore_date1_fx);
+		fore_date1_fl = (TextView) findViewById(R.id.fore_date1_fl);
+		
+		fore_date2 = (TextView) findViewById(R.id.fore_date2);
+		fore_date2_weather = (TextView) findViewById(R.id.fore_date2_weather);
+		fore_date2_temp1 = (TextView) findViewById(R.id.fore_date2_temp1);
+		fore_date2_temp2 = (TextView) findViewById(R.id.fore_date2_temp2);
+//		fore_date2_fx = (TextView) findViewById(R.id.fore_date2_fx);
+		fore_date2_fl = (TextView) findViewById(R.id.fore_date2_fl);
+		
+		fore_date3 = (TextView) findViewById(R.id.fore_date3);
+		fore_date3_weather = (TextView) findViewById(R.id.fore_date3_weather);
+		fore_date3_temp1 = (TextView) findViewById(R.id.fore_date3_temp1);
+		fore_date3_temp2 = (TextView) findViewById(R.id.fore_date3_temp2);
+//		fore_date3_fx = (TextView) findViewById(R.id.fore_date3_fx);
+		fore_date3_fl = (TextView) findViewById(R.id.fore_date3_fl);
+		
+		fore_date4 = (TextView) findViewById(R.id.fore_date4);
+		fore_date4_weather = (TextView) findViewById(R.id.fore_date4_weather);
+		fore_date4_temp1 = (TextView) findViewById(R.id.fore_date4_temp1);
+		fore_date4_temp2 = (TextView) findViewById(R.id.fore_date4_temp2);
+//		fore_date4_fx = (TextView) findViewById(R.id.fore_date4_fx);
+		fore_date4_fl = (TextView) findViewById(R.id.fore_date4_fl);
+		
+//		currentDateText = (TextView) findViewById(R.id.current_date);
+		currentDate = (TextView) findViewById(R.id.date);
+		switchCity = (Button) findViewById(R.id.switch_city);
+		refreshWeather = (Button) findViewById(R.id.refresh_weather);
+		String countryName = getIntent().getStringExtra("country_name");
+		String countryCode = getIntent().getStringExtra("country_code");
 		isFromChooseAreaActivity = getIntent().getBooleanExtra("from_chooseArea_activity", false);
+		datas.add(countryName);
+		queryWeatherInfo(countryCode);
+		temp = pref.getString("tempNow", "");
+		datas.add(temp);
 		
-		viewPager = (ViewPager) this.findViewById(R.id.viewpager);
+		viewPager = (ViewPager) findViewById(R.id.viewpager);
 		View view = LayoutInflater.from(this).inflate(R.layout.weather_layout, null);
+		views = new ArrayList<View>();
 		views.add(view);
-		//更新vpAdapter
-//		vpAdapter = new MyPagerAdapter(views,this);
-		
-//		viewPager.setAdapter(vpAdapter);
-		viewPager.setAdapter(new PagerAdapter() {
-			//viewPager中的组件数量
-			@Override
-			public int getCount() {
-				return views.size();
-			}
-			//滑动切换时销毁当前组件
-			@Override
-			public void destroyItem(ViewGroup container, int position, Object object) {
-				((ViewPager) container).removeView(views.get(position));
-			}
-			//滑动时生成的组件
-			@Override
-			public Object instantiateItem(ViewGroup container, int position) {
-				((ViewPager) container).addView(views.get(position));
-				return views.get(position);
-			}
-			
-			@Override
-			public boolean isViewFromObject(View arg0, Object arg1) {
-				return arg0 == arg1;
-			}
-			
-			@Override
-			public int getItemPosition(Object object) {
-				return super.getItemPosition(object);
-			}
-			
-//			@Override
-//			public CharSequence getPageTitle(int position) {
-//				return titleContainer.get(position);
-//			}
-		});
+		viewPager.setAdapter(new MyPagerAdapter(views,datas));
 		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
+			//当滑动状态改变时调用
             @Override
             public void onPageScrollStateChanged(int arg0) {
             }
- 
+          //当前页被滑动时调用
             @Override
             public void onPageScrolled(int arg0, float arg1, int arg2) {
             }
- 
+          //当新页面被选中时调用
             @Override
             public void onPageSelected(int arg0) {
+//            	choosedCountryCode = choosedCountryList.get(arg0 * 2 + 1);
+//        		publishText.setText("同步中···");
+//        		weatherInfoLayout.setVisibility(View.INVISIBLE);
+//        		cityNameText.setVisibility(View.INVISIBLE);
+//        		queryWeatherInfo(choosedCountryCode);
             }
 		});
-		//绑定回调
-//		viewPager.setOnPageChangeListener(this);
+		//初始化vpAdapter
+//		initViewPager();
 		
 //		if (!TextUtils.isEmpty(countryCode)) {
 //			//有县级代号就去查询天气
@@ -254,56 +230,33 @@ public class WeatherActivity extends Activity {
 //		}
 		
 		//从ChooseAreaActivity跳转过来就要更新choosedCountryList
-//		if (isFromChooseAreaActivity && !TextUtils.isEmpty(countryCode)) {
-//			if (choosedCountryList.size() == 0) {
-//				choosedCountryList.add(countryName);
-//				choosedCountryList.add(countryCode);
-//				View view1 = LayoutInflater.from(this).inflate(R.layout.weather_layout, null);
-//				views.add(view1);
-//				//更新vpAdapter
-//				vpAdapter = new MyPagerAdapter(views,this);
-//				
-//				viewPager.setAdapter(vpAdapter);
-//				
-//				//绑定回调
-//				viewPager.setOnPageChangeListener(this);
-//			} else if (!isCountryChoosed(countryCode)) {
-//				choosedCountryList.add(countryName);
-//				choosedCountryList.add(countryCode);
-//				View view1 = LayoutInflater.from(this).inflate(R.layout.weather_layout, null);
-//				views.add(view1);
-//				//更新vpAdapter
-//				vpAdapter = new MyPagerAdapter(views,this);
-//				
-//				viewPager.setAdapter(vpAdapter);
-//				
-//				//绑定回调
-//				viewPager.setOnPageChangeListener(this);
-//			}
-//		}
-		
-//		switchCity.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
-//				Intent intent = new Intent(WeatherActivity.this, ManageCityActivity.class);
-//				intent.putExtra("from_weather_activity", true);
-//				intent.putExtra("choosedCountryList", (Serializable)choosedCountryList);
-//				startActivity(intent);
-//			}
-//		});
-//		refreshWeather.setOnClickListener(new OnClickListener() {
-//			@Override
-//			public void onClick(View v) {
+		if (isFromChooseAreaActivity && !TextUtils.isEmpty(countryCode)) {
+			if (choosedCountryList.size() == 0) {
+				choosedCountryList.add(countryName);
+				choosedCountryList.add(countryCode);
 //				publishText.setText("同步中···");
-////				String weatherCode = prefs.getString("weather_code", "");
-//				String weatherCode = getIntent().getStringExtra("country_code");
-//				if (!TextUtils.isEmpty(weatherCode)) {
-//					queryWeatherInfo(weatherCode);
-//				} else {
-//					showWeather();
-//				}
-//			}
-//		});
+//				weatherInfoLayout.setVisibility(View.INVISIBLE);
+//				cityNameText.setVisibility(View.INVISIBLE);
+//				queryWeatherInfo(countryCode);
+//				View view = LayoutInflater.from(this).inflate(R.layout.weather_layout, null);
+//				views.add(view);
+//				initViewPager(views);
+			} else if (!isCountryChoosed(countryCode)) {
+				choosedCountryList.add(countryName);
+				choosedCountryList.add(countryCode);
+//				publishText.setText("同步中···");
+//				weatherInfoLayout.setVisibility(View.INVISIBLE);
+//				cityNameText.setVisibility(View.INVISIBLE);
+//				queryWeatherInfo(countryCode);
+//				View view = LayoutInflater.from(this).inflate(R.layout.weather_layout, null);
+//				views.add(view);
+//				//更新vpAdapter
+//				initViewPager(views);
+			}
+		}
+		
+		//初始化vpAdapter
+//		initViewPager();
 		
 		//设置手指滑动屏幕监听
 //		weather_layout.setOnTouchListener(new View.OnTouchListener() {
@@ -378,56 +331,129 @@ public class WeatherActivity extends Activity {
 //		});
 	}
 	
-	//当滑动状态改变时调用
-//	@Override
-//	public void onPageScrollStateChanged(int arg0) {
-//	}
-//	
-//	//当前页被滑动时调用
-//	@Override
-//	public void onPageScrolled(int arg0, float arg1, int arg2) {
-//	}
-//	
-//	//当新页面被选中时调用
-//	@Override
-//	public void onPageSelected(int arg0) {
-//		choosedCountryCode = choosedCountryList.get(arg0 * 2 + 1);
-//		publishText.setText("同步中···");
-//		weatherInfoLayout.setVisibility(View.INVISIBLE);
-//		cityNameText.setVisibility(View.INVISIBLE);
-//		queryWeatherInfo(choosedCountryCode);
-//	}
+	private void initViewPager() {
+//		viewPager = (ViewPager) findViewById(R.id.viewpager);
+//		View view = LayoutInflater.from(this).inflate(R.layout.weather_layout, null);
+//		View view2 = LayoutInflater.from(this).inflate(R.layout.weather_layout, null);
+//		views = new ArrayList<View>();
+//		views.add(view);
+//		views.add(view2);
+//		viewPager.setAdapter(new MyPagerAdapter(views,countryName));
+//		viewPager.setAdapter(new PagerAdapter() {
+//			//viewPager中的组件数量
+//			@Override
+//			public int getCount() {
+//				return views.size();
+//			}
+//			//滑动切换时销毁当前组件
+//			@Override
+//			public void destroyItem(ViewGroup container, int position, Object object) {
+//				((ViewPager) container).removeView(views.get(position));
+//			}
+//			//滑动时生成的组件
+//			@Override
+//			public Object instantiateItem(ViewGroup container, int position) {
+//				((ViewPager) container).addView(views.get(position));
+//				choosedCountryCode = choosedCountryList.get(position * 2 +1);
+//				if (choosedCountryCode != null) {
+//					queryWeatherInfo(choosedCountryCode);
+//				}
+//				switchCity = (Button) findViewById(R.id.switch_city);
+//				refreshWeather = (Button) findViewById(R.id.refresh_weather);
+//				switchCity.setOnClickListener(new OnClickListener() {
+//					@Override
+//					public void onClick(View v) {
+//						Intent intent = new Intent(WeatherActivity.this, ManageCityActivity.class);
+//						intent.putExtra("from_weather_activity", true);
+//						intent.putExtra("choosedCountryList", (Serializable)choosedCountryList);
+//						startActivity(intent);
+//					}
+//				});
+////				refreshWeather.setOnClickListener(new OnClickListener() {
+////					@Override
+////					public void onClick(View v) {
+////						publishText.setText("同步中···");
+//////						String weatherCode = prefs.getString("weather_code", "");
+//////						String weatherCode = getIntent().getStringExtra("country_code");
+//////						if (!TextUtils.isEmpty(weatherCode)) {
+//////							queryWeatherInfo(weatherCode);
+//////						} else {
+//////							showWeather();
+//////						}
+////					}
+////				});
+//				return views.get(position);
+//			}
+//			
+//			@Override
+//			public boolean isViewFromObject(View arg0, Object arg1) {
+//				return arg0 == arg1;
+//			}
+//			
+//			@Override
+//			public int getItemPosition(Object object) {
+//				return PagerAdapter.POSITION_NONE;
+////				return super.getItemPosition(object);
+//			}
+//			
+////			@Override
+////			public CharSequence getPageTitle(int position) {
+////				return titleContainer.get(position);
+////			}
+//		});
+//		viewPager.setCurrentItem(0);
+//		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
+//			//当滑动状态改变时调用
+//            @Override
+//            public void onPageScrollStateChanged(int arg0) {
+//            }
+//          //当前页被滑动时调用
+//            @Override
+//            public void onPageScrolled(int arg0, float arg1, int arg2) {
+//            }
+//          //当新页面被选中时调用
+//            @Override
+//            public void onPageSelected(int arg0) {
+////            	choosedCountryCode = choosedCountryList.get(arg0 * 2 + 1);
+////        		publishText.setText("同步中···");
+////        		weatherInfoLayout.setVisibility(View.INVISIBLE);
+////        		cityNameText.setVisibility(View.INVISIBLE);
+////        		queryWeatherInfo(choosedCountryCode);
+//            }
+//		});
+	}
 	
 	//判断城市是否已经选择过
-//	private boolean isCountryChoosed(String countryCode) {
-//		for (int i=1; i<choosedCountryList.size(); i+=2){
-//			String code = choosedCountryList.get(i);
-//			if (code.equals(countryCode)) {
-//				return true;
-//			}
-//		}
-//		return false;
-//	}
+	private boolean isCountryChoosed(String countryCode) {
+		for (int i=1; i<choosedCountryList.size(); i+=2){
+			String code = choosedCountryList.get(i);
+			if (code.equals(countryCode)) {
+				return true;
+			}
+		}
+		return false;
+	}
 	
 	//根据城市名字查询choosedCountryList获取城市code
-//	private String queryChoosedCountryCode(String countryName) {
-//		for (int i=0; i<choosedCountryList.size(); i++) {
-//			 if (choosedCountryList.get(i).startsWith(countryName)) {
-//				 String choosedCountryCode = choosedCountryList.get(i).split("_")[-1];
-//				 return choosedCountryCode;
-//			 }
-//		}
-//		return null;
-//	}
-//	
-//	private int queryChoosedCountryIndex(String countryName) {
-//		for (int i=0; i<choosedCountryList.size(); i++) {
-//			 if (choosedCountryList.get(i).startsWith(countryName)) {
-//				 return i;
-//			 }
-//		}
-//		return -1;
-//	}
+	private String queryChoosedCountryCode(String countryName) {
+		for (int i=0; i<choosedCountryList.size(); i++) {
+			 if (choosedCountryList.get(i).startsWith(countryName)) {
+				 String choosedCountryCode = choosedCountryList.get(i).split("_")[-1];
+				 return choosedCountryCode;
+			 }
+		}
+		return null;
+	}
+	
+	private int queryChoosedCountryIndex(String countryName) {
+		for (int i=0; i<choosedCountryList.size(); i++) {
+			 if (choosedCountryList.get(i).startsWith(countryName)) {
+				 return i;
+			 }
+		}
+		return -1;
+	}
+	
 //	@Override
 //	public void onClick(View v) {
 //		switch (v.getId()) {
@@ -455,50 +481,50 @@ public class WeatherActivity extends Activity {
 //	}
 	
 	//查询天气代号所对应的天气
-//	private void queryWeatherInfo(String countryCode) {
-////		String address = "http://www.weather.com.cn/adat/cityinfo/" + weatherCode + ".html";
-//		String address1 = "http://wthrcdn.etouch.cn/weather_mini?citykey=" + countryCode;
-////		String address = "http://wthrcdn.etouch.cn/WeatherApi?city=" + countryName;
-//		String address2 = "http://wthrcdn.etouch.cn/WeatherApi?citykey=" + countryCode;
-//		queryFromServer(address1, "weatherCode1");
-//		queryFromServer(address2, "weatherCode2");
-//	}
+	private void queryWeatherInfo(String countryCode) {
+//		String address = "http://www.weather.com.cn/adat/cityinfo/" + weatherCode + ".html";
+		String address1 = "http://wthrcdn.etouch.cn/weather_mini?citykey=" + countryCode;
+//		String address = "http://wthrcdn.etouch.cn/WeatherApi?city=" + countryName;
+		String address2 = "http://wthrcdn.etouch.cn/WeatherApi?citykey=" + countryCode;
+		queryFromServer(address1, "weatherCode1");
+		queryFromServer(address2, "weatherCode2");
+	}
 	
 	//根据传入的地址和类型去服务器查询天气代号或天气信息
-//	private void queryFromServer(final String address, final String type) {
-//		HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
-//			@Override
-//			public void onFinish(final String response) {
-//				if ("weatherCode1".equals(type)) {
-//					Utility.handleWeatherResponse(WeatherActivity.this, response);
-//				}
-//				if ("weatherCode2".equals(type)) {
-//					Utility.handleWeatherXMLResponse(WeatherActivity.this, response);
-//				}
+	private void queryFromServer(final String address, final String type) {
+		HttpUtil.sendHttpRequest(address, new HttpCallbackListener() {
+			@Override
+			public void onFinish(final String response) {
+				if ("weatherCode1".equals(type)) {
+					Utility.handleWeatherResponse(WeatherActivity.this, response);
+				}
+				if ("weatherCode2".equals(type)) {
+					Utility.handleWeatherXMLResponse(WeatherActivity.this, response);
+				}
 //				runOnUiThread(new Runnable() {
 //					@Override
 //					public void run() {
 //						showWeather();
 //					}
 //				});	
-//				
-//			}
-//			
-//			@Override
-//			public void onError(Exception e) {
-//				runOnUiThread(new Runnable() {
-//					@Override
-//					public void run() {
-//						publishText.setText("同步失败");
-//					}
-//				});
-//			}
-//		});
-//	}
+				
+			}
+			
+			@Override
+			public void onError(Exception e) {
+				runOnUiThread(new Runnable() {
+					@Override
+					public void run() {
+						publishText.setText("同步失败");
+					}
+				});
+			}
+		});
+	}
 	
 	//从SharedPreferences文件中读取存储的天气信息，并显示到界面
 //	private void showWeather() { 
-////		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
+//		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(this);
 //		
 //		cityNameText.setText(pref.getString("city_name", ""));
 //		aqi.setText(pref.getString("aqi", ""));
@@ -549,6 +575,7 @@ public class WeatherActivity extends Activity {
 //		cityNameText.setVisibility(View.VISIBLE);
 //		Intent intent = new Intent(this, AutoUpdateService.class);
 //		startService(intent);
+//		viewPager.getAdapter().notifyDataSetChanged();
 //	}
 	
 }
