@@ -30,6 +30,16 @@ public class CoolWeatherOpenHelper extends SQLiteOpenHelper {
 			+ "country_code text, "
 			+ "city_id integer)"; 
 	
+	//ChoosedCountry建表语句
+	public static final String CREATE_CHOOSEDCOUNTRY = "create table ChoosedCountry ("
+			+ "id integer primary key autoincrement, "
+			+ "choosedcountry_name text, "
+			+ "choosedcountry_code text, "
+			+ "choosedcountry_tempLow text, "
+			+ "choosedcountry_tempHigh text, "
+			+ "choosedcountry_weather text, "
+			+ "choosedcountry_imageID integer)";
+	
 	public CoolWeatherOpenHelper(Context context, String name, CursorFactory factory, int version) {
 		super(context, name, factory, version);
 	}
@@ -39,6 +49,7 @@ public class CoolWeatherOpenHelper extends SQLiteOpenHelper {
 		db.execSQL(CREATE_PROVINCE);//创建Province表
 		db.execSQL(CREATE_CITY);//创建City表
 		db.execSQL(CREATE_COUNTRY);//创建Country表
+		db.execSQL(CREATE_CHOOSEDCOUNTRY);
 	}
 	
 	@Override

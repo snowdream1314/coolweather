@@ -123,5 +123,38 @@ public class CoolWeatherDB {
 		}
 		return list;
 	}
+	
+	//将ChoosedCountry实例存储到数据库
+	public void saveChoosedCountry(ChoosedCountryList choosedCountryList) {
+		if (choosedCountryList != null) {
+			ContentValues values = new ContentValues();
+			values.put("choosedcountry_name", choosedCountryList.getName());
+			values.put("choosedcountry_code", choosedCountryList.getCode());
+			values.put("choosedcountry_tempLow", choosedCountryList.getTempLow());
+			values.put("choosedcountry_tempHigh", choosedCountryList.getTempHigh());
+			values.put("choosedcountry_weather", choosedCountryList.getWeather());
+			values.put("choosedcountry_imageID", choosedCountryList.getImageId());
+			db.insert("ChoosedCountry", null, values);
+		}
+	}
+	
+	//从数据库获取ChoosedCountry表中的数据
+	public List<ChoosedCountryList> loadChoosedCountryList() {
+		List<ChoosedCountryList> list = new ArrayList<ChoosedCountryList>();
+		Cursor cursor = db.query("ChoosedCountry", null, null, null, null, null, null);
+		if (cursor.moveToFirst()) {
+			do {
+				ChoosedCountryList ChoosedCountryList = new ChoosedCountryList();
+				ChoosedCountryList.setCode(cursor.getString(cursor.getColumnIndex("choosedcountry_code")));
+				ChoosedCountryList.setName(cursor.getString(cursor.getColumnIndex("choosedcountry_name")));
+				ChoosedCountryList.setTempLow(cursor.getString(cursor.getColumnIndex("choosedcountry_tempLow")));
+				ChoosedCountryList.setTempHigh(cursor.getString(cursor.getColumnIndex("choosedcountry_tempHigh")));
+				ChoosedCountryList.setWeather(cursor.getString(cursor.getColumnIndex("choosedcountry_weather")));
+				ChoosedCountryList.setImageId(cursor.getInt(cursor.getColumnIndex("choosedcountry_imageID")));
+				list.add(ChoosedCountryList);
+			} while (cursor.moveToNext());
+		}
+		return list;
+	}
 		
 }

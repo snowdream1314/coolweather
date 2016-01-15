@@ -97,7 +97,7 @@
 	                android:textColor="#FFF"
 	            	android:textSize="20sp"/>
 	            <TextView 
-	                android:id="@+id/temp1"
+	                android:id="@+id/tempLow"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_gravity="center_horizontal"
@@ -114,7 +114,7 @@
 	                android:textColor="#FFF"
 	            	android:textSize="20sp"/>
                <TextView 
-	                android:id="@+id/temp2"
+	                android:id="@+id/tempHigh"
 	                android:layout_width="wrap_content"
 	                android:layout_height="wrap_content"
 	                android:layout_gravity="center_horizontal"
@@ -333,7 +333,7 @@
 			            android:layout_gravity="center_horizontal"
 			            android:orientation="horizontal">
 			             <TextView 
-			              	android:id="@+id/fore_date1_temp1"
+			              	android:id="@+id/fore_date1_tempLow"
 			             	android:layout_width="wrap_content"
 			              	android:layout_height="wrap_content"
 			              	android:layout_gravity="center_horizontal"
@@ -350,7 +350,7 @@
 			              	android:textColor="#FFF"
 			          		android:textSize="15sp"/>
 			            <TextView 
-			              	android:id="@+id/fore_date1_temp2"
+			              	android:id="@+id/fore_date1_tempHigh"
 			              	android:layout_width="wrap_content"
 			              	android:layout_height="wrap_content"
 			              	android:layout_gravity="center_horizontal"
@@ -420,7 +420,7 @@
 			            android:layout_gravity="center_horizontal"
 			            android:orientation="horizontal">
 			            <TextView 
-				             android:id="@+id/fore_date2_temp1"
+				             android:id="@+id/fore_date2_tempLow"
 				             android:layout_width="wrap_content"
 				             android:layout_height="wrap_content"
 				             android:layout_gravity="center_horizontal"
@@ -437,7 +437,7 @@
 				             android:textColor="#FFF"
 				         	 android:textSize="15sp"/>
 			           <TextView 
-				             android:id="@+id/fore_date2_temp2"
+				             android:id="@+id/fore_date2_tempHigh"
 				             android:layout_width="wrap_content"
 				             android:layout_height="wrap_content"
 				             android:layout_gravity="center_horizontal"
@@ -507,7 +507,7 @@
 			            android:layout_gravity="center_horizontal"
 			            android:orientation="horizontal">
 			            <TextView 
-				             android:id="@+id/fore_date3_temp1"
+				             android:id="@+id/fore_date3_tempLow"
 				             android:layout_width="wrap_content"
 				             android:layout_height="wrap_content"
 				             android:layout_gravity="center_horizontal"
@@ -524,7 +524,7 @@
 				             android:textColor="#FFF"
 				         	 android:textSize="15sp"/>
 			           <TextView 
-				             android:id="@+id/fore_date3_temp2"
+				             android:id="@+id/fore_date3_tempHigh"
 				             android:layout_width="wrap_content"
 				             android:layout_height="wrap_content"
 				             android:layout_gravity="center_horizontal"
@@ -595,7 +595,7 @@
 			            android:layout_gravity="center_horizontal"
 			            android:orientation="horizontal">
 			            <TextView 
-				             android:id="@+id/fore_date4_temp1"
+				             android:id="@+id/fore_date4_tempLow"
 				             android:layout_width="wrap_content"
 				             android:layout_height="wrap_content"
 				             android:layout_gravity="center_horizontal"
@@ -612,7 +612,7 @@
 				             android:textColor="#FFF"
 				         	 android:textSize="15sp"/>
 			           <TextView 
-				             android:id="@+id/fore_date4_temp2"
+				             android:id="@+id/fore_date4_tempHigh"
 				             android:layout_width="wrap_content"
 				             android:layout_height="wrap_content"
 				             android:layout_gravity="center_horizontal"

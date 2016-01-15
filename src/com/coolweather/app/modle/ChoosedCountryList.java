@@ -1,11 +1,12 @@
 package com.coolweather.app.modle;
 
-public class CityList {
+public class ChoosedCountryList {
 	
 	private String name;
 	private String code;
 	private int imageId;
-	private String temp;
+	private String tempLow;
+	private String tempHigh;
 	private String weather;
 	
 	public String getName() {
@@ -40,11 +41,20 @@ public class CityList {
 		this.imageId = imageId;
 	}
 	
-	public String getTemp() {
-		return temp;
+	public String getTempLow() {
+		return tempLow;
 	}
 	
-	public void setTemp(String temp) {
-		this.temp = temp;
+	public void setTempLow(String tempLow) {
+		this.tempLow = tempLow;
+	}
+	
+	public String getTempHigh() {
+		return tempHigh;
+	}
+	
+	public void setTempHigh(String tempHigh) {
+		this.tempHigh = tempHigh;
 	}
 }
+

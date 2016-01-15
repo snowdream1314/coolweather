@@ -301,7 +301,7 @@ public class Utility {
 	}
 	
 	//解析服务器返回的XML天气数据
-	public static void handleWeatherXMLResponse(Context context, String response) {
+	public static void handleWeatherXMLResponse(Context context, String response, SharedPreferences pref) {
 		try {
 			String cityName = "";
 			String updateTime="";
@@ -443,7 +443,7 @@ public class Utility {
 						//将获得的数据存入SharedPreferences
 //						saveWeatherXml(context, cityName, updateTime, tempNow, fengLi, fengXiang, shidu, sunrise_1, 
 //								sunset_1, aqi, pm25, suggest, quality, MajorPollutants, weatherList, zhiShus);
-						saveWeatherXml(context, weatherDatas, weatherList, zhiShus);
+						saveWeatherXml(context, pref, weatherDatas, weatherList, zhiShus);
 					}
 					break;
 				
@@ -487,8 +487,9 @@ public class Utility {
 //	public static void saveWeatherXml(Context context, String cityName, String updateTime, String tempNow, String fengLi, 
 //			String fengXiang, String shidu, String sunrise_1, String sunset_1, String aqi, String pm25, String suggest,String quality,
 //			String MajorPollutants, List<Weather> weatherList, List<WeatherZhiShu> zhiShus) {
-	public static void saveWeatherXml(Context context, List<String> weatherDatas, List<Weather> weatherList, List<WeatherZhiShu> zhiShus) {	
-		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+	public static void saveWeatherXml(Context context, SharedPreferences pref, List<String> weatherDatas, List<Weather> weatherList, List<WeatherZhiShu> zhiShus) {	
+//		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+		SharedPreferences.Editor editor = pref.edit();
 //		editor.putString("city_name", weatherDatas.get(0));
 		editor.putString("updatetime", weatherDatas.get(1));
 //		editor.putString("tempNow", weatherDatas.get(2));
@@ -553,7 +554,7 @@ public class Utility {
 //	}
 	
 	//解析服务器返回的JSON数据，并存储到本地
-	public static void handleWeatherResponse(Context context, String response) {
+	public static void handleWeatherResponse(Context context, String response, SharedPreferences pref) {
 		String fengXiang,fengLi,tempHigh,tempLow,weatherDesp,dateNow,cityName,tempNow,aqi,ganmao;
 		Gson gson = new Gson();
 		JsonBean jsonBean = gson.fromJson(response, JsonBean.class);
@@ -573,7 +574,7 @@ public class Utility {
 				tempLow = jsonBean.getData().getForecast().get(i).getLow().replace("低温 ", "");
 				weatherDesp = jsonBean.getData().getForecast().get(i).getType();
 				dateNow = jsonBean.getData().getForecast().get(i).getDate();
-				saveWeatherInfo(context, cityName, aqi, ganmao, tempNow, fengXiang, fengLi, tempHigh, tempLow, weatherDesp, dateNow, i);
+				saveWeatherInfo(context, pref, cityName, aqi, ganmao, tempNow, fengXiang, fengLi, tempHigh, tempLow, weatherDesp, dateNow, i);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -582,9 +583,10 @@ public class Utility {
 	
 	
 	//将服务器返回的所有天气信息存储到SharedPreferences文件中
-	public static void saveWeatherInfo(Context context, String cityName, String aqi, String ganmao, String tempNow, String fengXiang, String fengLi, String tempHigh, String tempLow, String weatherDesp, String dateNow, int i) {
+	public static void saveWeatherInfo(Context context, SharedPreferences pref, String cityName, String aqi, String ganmao, String tempNow, String fengXiang, String fengLi, String tempHigh, String tempLow, String weatherDesp, String dateNow, int i) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
-		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+//		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
+		SharedPreferences.Editor editor = pref.edit();
 		editor.putBoolean("city_selected", true);
 		editor.putString("city_name", cityName);
 		editor.putString("aqi", aqi);
@@ -592,8 +594,8 @@ public class Utility {
 //		editor.putString("weather_code", weatherCode);
 		editor.putString("weather_code", "");
 		editor.putString("tempNow", tempNow);
-		editor.putString("temp1".concat("_" + Integer.toString(i)), tempLow);
-		editor.putString("temp2".concat("_" + Integer.toString(i)), tempHigh);
+		editor.putString("tempLow".concat("_" + Integer.toString(i)), tempLow);
+		editor.putString("tempHigh".concat("_" + Integer.toString(i)), tempHigh);
 		editor.putString("feng_xiang".concat("_" + Integer.toString(i)), fengXiang);
 		editor.putString("feng_li".concat("_" + Integer.toString(i)), fengLi);
 		editor.putString("weatherDesp".concat("_" + Integer.toString(i)), weatherDesp);
