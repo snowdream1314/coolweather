@@ -65,14 +65,17 @@ public class ChooseAreaActivity extends Activity {
 	//是否从ManageCityActivity跳转过来
 	private boolean isFromManageCityActivity;
 	
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		isFromWeatherActivity = getIntent().getBooleanExtra("from_weather_activity", false);
 		isFromManageCityActivity = getIntent().getBooleanExtra("from_managecity_activity", false);
-		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+//		SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		coolWeatherDB = CoolWeatherDB.getInstance(this);
 		//已经选择了城市且不是从ManageCityActivity跳转过来，才会直接跳到WeatherActivity
-		if (prefs.getBoolean("city_selected", false) && !isFromWeatherActivity && !isFromManageCityActivity) {
+//		if (prefs.getBoolean("city_selected", false) && !isFromWeatherActivity && !isFromManageCityActivity) {
+		if (coolWeatherDB.loadChoosedCountryList().size() != 0 && !isFromWeatherActivity && !isFromManageCityActivity) {
 			Intent intent = new Intent(this, WeatherActivity.class);
 			startActivity(intent);
 			finish();
@@ -84,7 +87,6 @@ public class ChooseAreaActivity extends Activity {
 		titleText = (TextView) findViewById(R.id.title_text);
 		adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, dataList);
 		listView.setAdapter(adapter);
-		coolWeatherDB = CoolWeatherDB.getInstance(this);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int index, long arg3) {

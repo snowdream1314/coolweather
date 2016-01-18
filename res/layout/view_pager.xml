@@ -18,7 +18,7 @@
     android:background="#999"
     android:orientation="vertical">
     
-    <!-- <RelativeLayout 
+    <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#484E61">
@@ -42,7 +42,6 @@
 	            android:layout_centerInParent="true"
 	            android:textColor="#fff"
 	            android:textSize="30sp" />
-	        
         </LinearLayout>
         <Button 
             android:id="@+id/refresh_weather"
@@ -52,7 +51,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:background="@drawable/update1"/>
-    </RelativeLayout> -->
+    </RelativeLayout>
     
     <android.support.v4.view.ViewPager
         android:id="@+id/viewpager"

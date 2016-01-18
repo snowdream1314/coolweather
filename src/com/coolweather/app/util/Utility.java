@@ -342,7 +342,7 @@ public class Utility {
 					}
 					if ("wendu".equals(nodeName)) {
 						tempNow = xmlPullParser.nextText();
-						weatherDatas.add(tempNow);
+						weatherDatas.add(tempNow.concat("°"));
 					}
 					if ("fengli".equals(nodeName)) {
 						fengLi = xmlPullParser.nextText();
@@ -439,7 +439,7 @@ public class Utility {
 //						zhiShus.add(weatherZhiShu);
 //						weatherZhiShu = null;
 //					}
-					if ("environment".equals(nodeName)) {
+					if ("resp".equals(nodeName)) {
 						//将获得的数据存入SharedPreferences
 //						saveWeatherXml(context, cityName, updateTime, tempNow, fengLi, fengXiang, shidu, sunrise_1, 
 //								sunset_1, aqi, pm25, suggest, quality, MajorPollutants, weatherList, zhiShus);
@@ -493,9 +493,9 @@ public class Utility {
 //		editor.putString("city_name", weatherDatas.get(0));
 		editor.putString("updatetime", weatherDatas.get(1));
 //		editor.putString("tempNow", weatherDatas.get(2));
-//		editor.putString("feng_li", weatherDatas.get(3));
+		editor.putString("feng_li_now", weatherDatas.get(3));
 		editor.putString("shidu", weatherDatas.get(4));
-//		editor.putString("feng_xiang", weatherDatas.get(5));
+		editor.putString("feng_xiang_now", weatherDatas.get(5));
 		editor.putString("sunrise_1", weatherDatas.get(6));
 		editor.putString("sunset_1", weatherDatas.get(7));
 //		editor.putString("aqi", weatherDatas.get(8));
@@ -574,7 +574,7 @@ public class Utility {
 				tempLow = jsonBean.getData().getForecast().get(i).getLow().replace("低温 ", "");
 				weatherDesp = jsonBean.getData().getForecast().get(i).getType();
 				dateNow = jsonBean.getData().getForecast().get(i).getDate();
-				saveWeatherInfo(context, pref, cityName, aqi, ganmao, tempNow, fengXiang, fengLi, tempHigh, tempLow, weatherDesp, dateNow, i);
+				saveWeatherInfo(context, pref, cityName, tempNow, aqi, ganmao, fengXiang, fengLi, tempHigh, tempLow, weatherDesp, dateNow, i);
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -583,7 +583,7 @@ public class Utility {
 	
 	
 	//将服务器返回的所有天气信息存储到SharedPreferences文件中
-	public static void saveWeatherInfo(Context context, SharedPreferences pref, String cityName, String aqi, String ganmao, String tempNow, String fengXiang, String fengLi, String tempHigh, String tempLow, String weatherDesp, String dateNow, int i) {
+	public static void saveWeatherInfo(Context context, SharedPreferences pref, String cityName, String tempNow, String aqi, String ganmao, String fengXiang, String fengLi, String tempHigh, String tempLow, String weatherDesp, String dateNow, int i) {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy年M月d日", Locale.CHINA);
 //		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
 		SharedPreferences.Editor editor = pref.edit();

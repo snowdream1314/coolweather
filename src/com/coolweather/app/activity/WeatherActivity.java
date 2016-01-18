@@ -32,7 +32,7 @@ import android.widget.TextView;
 
 public class WeatherActivity extends Activity {
 	
-	private LinearLayout weatherInfoLayout, weather_forecast;
+	private LinearLayout weatherInfoLayout, weather_forecast, airQuality;
 	//显示城市名
 	private TextView cityNameText;
 	
@@ -85,7 +85,12 @@ public class WeatherActivity extends Activity {
 	private LinearLayout weather_layout;
 	
 	//是否从ChooseAreaActivity跳转过来
-	private boolean isFromChooseAreaActivity, isFirstFromChooseAreaActivity;
+	private boolean isFromChooseAreaActivity;
+	
+	//是否从ManageCityActivity跳转过来
+	private boolean isFromManageCityActivity;
+	
+	private boolean isFirstStartActivity;
 	
 	//监听手指滑动屏幕事件参数
 //	private float xDown;
@@ -108,9 +113,8 @@ public class WeatherActivity extends Activity {
 	//选中的城市集合
 	private ChoosedCountryList choosedCountry;
 	private List<ChoosedCountryList> choosedCountryList = new ArrayList<ChoosedCountryList>();
-	private String choosedCountryCode;
-//	private String choosedCountryName;
-	private List<String> choosedCountryCodes = new ArrayList<String>();
+	private int index;
+	
 	//数据库
 	private CoolWeatherDB coolWeatherDB;
 	
@@ -126,26 +130,30 @@ public class WeatherActivity extends Activity {
 		
 		coolWeatherDB = CoolWeatherDB.getInstance(this);
 		choosedCountryList.clear();
+		index = 0;
 		
 		//初始化各控件
-//		weatherInfoLayout = (LinearLayout) findViewById(R.id.weather_info_layout);
-//		weather_layout = (LinearLayout) findViewById(R.id.weather_layout);
-//		choosedCountry = new ChoosedCountryList();
+//		airQuality = (LinearLayout) findViewById(R.id.air_quality);
+		cityNameText = (TextView) findViewById(R.id.city_name);
+		switchCity = (Button) findViewById(R.id.switch_city);
+		refreshWeather = (Button) findViewById(R.id.refresh_weather);
+		
 		choosedCountryList = coolWeatherDB.loadChoosedCountryList();
 		if (choosedCountryList.size() != 0) {
+			index = choosedCountryList.size() - 1;
 			for (int i=0; i<choosedCountryList.size(); i++) {
-//				choosedCountryCode = choosedCountryList.get(i).getCode();
-//				queryWeatherInfo(choosedCountryCode);
 				initViewPager();
 			}
+			viewPager.setCurrentItem(index);
 		} else {
 			String countryName = getIntent().getStringExtra("country_name");
 			String countryCode = getIntent().getStringExtra("country_code");
 //			isFromChooseAreaActivity = getIntent().getBooleanExtra("from_chooseArea_activity", false);
 			//从ChooseAreaActivity跳转过来
 			if (!TextUtils.isEmpty(countryCode)) {
+				queryWeatherInfo(countryCode);
 				pref = getSharedPreferences(countryCode,MODE_PRIVATE);
-				queryWeatherInfo(countryCode,pref);
+				choosedCountry = new ChoosedCountryList();
 				choosedCountry.setCode(countryCode);
 				choosedCountry.setName(countryName);
 				choosedCountry.setTempLow(pref.getString("tempLow_0", ""));
@@ -154,37 +162,14 @@ public class WeatherActivity extends Activity {
 				coolWeatherDB.saveChoosedCountry(choosedCountry);
 				choosedCountryList = coolWeatherDB.loadChoosedCountryList();
 				initViewPager();
-				isFirstFromChooseAreaActivity = true;
+				viewPager.setCurrentItem(index);
+				isFirstStartActivity = true;
 			}
 		}
 		
 		//启动后台自动更新天气服务
 		Intent intent = new Intent(this, AutoUpdateService.class);
 		startService(intent);
-		
-//		viewPager = (ViewPager) findViewById(R.id.viewpager);
-//		View view = LayoutInflater.from(this).inflate(R.layout.weather_layout, null);
-//		View view1 = LayoutInflater.from(this).inflate(R.layout.weather_layout, null);
-////		views = new ArrayList<View>();
-//		views.add(view);
-//		views.add(view1);
-//		vpAdapter = new MyPagerAdapter(views,datas);
-//		viewPager.setAdapter(vpAdapter);
-//		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
-//			//当滑动状态改变时调用
-//            @Override
-//            public void onPageScrollStateChanged(int arg0) {
-//            }
-//          //当前页被滑动时调用
-//            @Override
-//            public void onPageScrolled(int arg0, float arg1, int arg2) {
-//            }
-//          //当新页面被选中时调用
-//            @Override
-//            public void onPageSelected(int arg0) {
-//            	updateDatas(choosedCountryList.get(arg0-1));
-//            }
-//		});
 		
 		//设置手指滑动屏幕监听
 //		weather_layout.setOnTouchListener(new View.OnTouchListener() {
@@ -278,17 +263,15 @@ public class WeatherActivity extends Activity {
 			@Override
 			public Object instantiateItem(ViewGroup container, int position) {
 				((ViewPager) container).addView(views.get(position));
+				final int view_position = position;
 				getPositionViews(position);
-//				queryWeatherInfo(countryCode);
+				queryWeatherInfo(choosedCountryList.get(position).getCode());
 				showWeather(choosedCountryList.get(position).getCode());
 				switchCity.setOnClickListener(new OnClickListener() {
 					@Override
 					public void onClick(View v) {
 						Intent intent = new Intent(WeatherActivity.this, ManageCityActivity.class);
-//						Intent intent = new Intent(WeatherActivity.this, ChooseAreaActivity.class);
 						intent.putExtra("from_weather_activity", true);
-//						intent.putExtra("choosedCountryList", (Serializable)choosedCountryList);
-//						intent.putExtra("viewsList", (Serializable)views);
 						startActivity(intent);
 						finish();
 					}
@@ -297,14 +280,13 @@ public class WeatherActivity extends Activity {
 					@Override
 					public void onClick(View v) {
 						publishText.setText("同步中···");
-////						String weatherCode = prefs.getString("weather_code", "");
-//						String weatherCode = getIntent().getStringExtra("country_code");
-//						String weatherCode = choosedCountryList.get(position);
-////						if (!TextUtils.isEmpty(weatherCode)) {
-////							queryWeatherInfo(weatherCode);
-////						} else {
-////							showWeather();
-////						}
+						String weatherCode = choosedCountryList.get(view_position).getCode();
+						if (!TextUtils.isEmpty(weatherCode)) {
+							queryWeatherInfo(weatherCode);
+							showWeather(weatherCode);
+						} else {
+							showWeather(weatherCode);
+						}
 					}
 				});
 				return views.get(position);
@@ -322,7 +304,7 @@ public class WeatherActivity extends Activity {
 			}
 			
 		});
-//		viewPager.setCurrentItem(0);
+//		viewPager.setCurrentItem(index);
 		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			//当滑动状态改变时调用
             @Override
@@ -335,15 +317,13 @@ public class WeatherActivity extends Activity {
           //当新页面被选中时调用
             @Override
             public void onPageSelected(int arg0) {
-//            	queryWeatherInfo(choosedCountryList.get(arg0));
-//            	showWeather();
             }
 		});
 	}
 	
 	//获取position位置各个实例
 	private void getPositionViews(int position) {
-		cityNameText = (TextView) views.get(position).findViewById(R.id.city_name);
+//		cityNameText = (TextView) views.get(position).findViewById(R.id.city_name);
 		aqi = (TextView) views.get(position).findViewById(R.id.aqi);
 		pm25 = (TextView) views.get(position).findViewById(R.id.pm25);
 		publishText = (TextView) views.get(position).findViewById(R.id.publish_text);
@@ -389,8 +369,8 @@ public class WeatherActivity extends Activity {
 		
 //		currentDateText = (TextView) findViewById(R.id.current_date);
 		currentDate = (TextView) views.get(position).findViewById(R.id.date);
-		switchCity = (Button) views.get(position).findViewById(R.id.switch_city);
-		refreshWeather = (Button) views.get(position).findViewById(R.id.refresh_weather);
+//		switchCity = (Button) views.get(position).findViewById(R.id.switch_city);
+//		refreshWeather = (Button) views.get(position).findViewById(R.id.refresh_weather);
 	}
 	
 	//判断城市是否已经选择过
@@ -451,7 +431,8 @@ public class WeatherActivity extends Activity {
 //	}
 	
 	//查询天气代号所对应的天气
-	private void queryWeatherInfo(String countryCode, SharedPreferences pref) {
+	private void queryWeatherInfo(String countryCode) {
+		pref = getSharedPreferences(countryCode,MODE_PRIVATE);
 //		String address = "http://www.weather.com.cn/adat/cityinfo/" + weatherCode + ".html";
 		String address1 = "http://wthrcdn.etouch.cn/weather_mini?citykey=" + countryCode;
 //		String address = "http://wthrcdn.etouch.cn/WeatherApi?city=" + countryName;
@@ -500,8 +481,8 @@ public class WeatherActivity extends Activity {
 		cityNameText.setText(pref.getString("city_name", ""));
 		aqi.setText(pref.getString("aqi", ""));
 		pm25.setText(pref.getString("pm25", ""));
-		fengXiang.setText(pref.getString("feng_xiang_0", ""));
-		fengLi.setText(pref.getString("feng_li_0", ""));
+		fengXiang.setText(pref.getString("feng_xiang_now", ""));
+		fengLi.setText(pref.getString("feng_li_now", ""));
 		tempNow.setText(pref.getString("tempNow", ""));
 		shidu.setText(pref.getString("shidu", ""));
 		quality.setText(pref.getString("quality", ""));
@@ -512,6 +493,11 @@ public class WeatherActivity extends Activity {
 		publishText.setText("今天" + pref.getString("updatetime", "") + "发布");
 		tempLowText.setText(pref.getString("tempLow_0", ""));
 		tempHighText.setText(pref.getString("tempHigh_0", ""));
+		if (pref.getString("aqi", "") == "") {
+			aqi.setVisibility(View.INVISIBLE);
+			pm25.setVisibility(View.INVISIBLE);
+			quality.setVisibility(View.INVISIBLE);
+		}
 		
 		fore_date1.setText(pref.getString("publish_time_1", ""));
 		fore_date1_weather.setText(pref.getString("weatherDesp_1", ""));
@@ -552,40 +538,49 @@ public class WeatherActivity extends Activity {
 	@Override
 	protected void onPause() {
 		super.onPause();
-		
 	}
 	
 	@Override
 	protected void onStart() {
 		super.onStart();
-		isFromChooseAreaActivity = getIntent().getBooleanExtra("from_chooseArea_activity", false);
-		choosedCountryList = coolWeatherDB.loadChoosedCountryList();
-		if (!isFirstFromChooseAreaActivity) {
+		if (!isFirstStartActivity) {
+			isFromChooseAreaActivity = getIntent().getBooleanExtra("from_chooseArea_activity", false);
+			isFromManageCityActivity = getIntent().getBooleanExtra("from_managecity_activity", false);
 			//添加新城市
 			if (isFromChooseAreaActivity) {
+				//从ChooseAreaActivity跳转过来
 				String countryName = getIntent().getStringExtra("country_name");
 				String countryCode = getIntent().getStringExtra("country_code");
-				//从ChooseAreaActivity跳转过来
-				if (!TextUtils.isEmpty(countryCode)) {
-					pref = getSharedPreferences(countryCode,MODE_PRIVATE);
-					queryWeatherInfo(countryCode,pref);
+				if (!isCountryChoosed(countryCode)) {
+//					queryWeatherInfo(countryCode);
+//					pref = getSharedPreferences(countryCode,MODE_PRIVATE);
+					choosedCountry = new ChoosedCountryList();
 					choosedCountry.setCode(countryCode);
 					choosedCountry.setName(countryName);
-					choosedCountry.setTempLow(pref.getString("tempLow_0", ""));
-					choosedCountry.setTempHigh(pref.getString("tempHigh_0", ""));
-					choosedCountry.setWeather(pref.getString("weatherDesp_0", ""));
+//					choosedCountry.setTempLow(pref.getString("tempLow_0", ""));
+//					choosedCountry.setTempHigh(pref.getString("tempHigh_0", ""));
+//					choosedCountry.setWeather(pref.getString("weatherDesp_0", ""));
 					coolWeatherDB.saveChoosedCountry(choosedCountry);
-				}
-			}
-			//不是添加新城市
-			if (choosedCountryList.size() != 0) {
-				for (int i=0; i<choosedCountryList.size(); i++) {
-//					choosedCountryCode = choosedCountryList.get(i).getCode();
-//					queryWeatherInfo(choosedCountryCode);
+					choosedCountryList = coolWeatherDB.loadChoosedCountryList();
+					index = choosedCountryList.size() - 1;
 					initViewPager();
+					viewPager.setCurrentItem(index);
 				}
-				isFirstFromChooseAreaActivity = false;
+			} else if (isFromManageCityActivity) {
+				//不是添加新城市
+//				choosedCountryList = coolWeatherDB.loadChoosedCountryList();
+//				if (choosedCountryList.size() != 0) {
+//					views.clear();
+//					for (int i=0; i<choosedCountryList.size(); i++) {
+//						initViewPager();
+//					}
+//				}
+				if (isFromManageCityActivity) {
+					index = getIntent().getIntExtra("index", 0);
+					viewPager.setCurrentItem(index);
+				}
 			}
+			isFirstStartActivity = false;
 		}
 	}
 
