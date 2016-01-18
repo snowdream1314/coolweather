@@ -23,8 +23,10 @@ import android.widget.TextView;
 public class ManageCityActivity extends Activity implements OnClickListener {
 	
 	private TextView add;
-//	private TextView edit;
+	private TextView edit;
 	private TextView back;
+	private TextView del;
+	
 	private String country_name;
 	private String country_code;
 	private ChoosedCountryList choosedCountry;
@@ -59,8 +61,12 @@ public class ManageCityActivity extends Activity implements OnClickListener {
 //		initCityList();
 		add = (TextView) findViewById(R.id.add);
 		back = (TextView) findViewById(R.id.back);
+		edit = (TextView) findViewById(R.id.edit);
+		del = (TextView) findViewById(R.id.del);
 		add.setOnClickListener(this);
 		back.setOnClickListener(this);
+		edit.setOnClickListener(this);
+		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View view, int index, long arg3) {
@@ -103,13 +109,39 @@ public class ManageCityActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.add:
-			Intent intent = new Intent(this, ChooseAreaActivity.class);
-			intent.putExtra("from_managecity_activity", true);
-			startActivity(intent);
+			Intent intent_add = new Intent(this, ChooseAreaActivity.class);
+			intent_add.putExtra("from_managecity_activity", true);
+			startActivity(intent_add);
 			finish();
 			break;
 		case R.id.back:
+			Intent intent_back = new Intent(this, ManageCityActivity.class);
+			intent_back.putExtra("from_managecity_activity", true);
+			startActivity(intent_back);
+			finish();
 			break;
+		case R.id.edit:
+			if (edit.getText() == "±à¼­") {
+				edit.setText("Íê³É");
+				listView.setOnItemClickListener(new OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> arg0, View view, int index, long arg3) {
+//					String country_code = list.get(index).getCode();
+						coolWeatherDB.delChoosedCountry(list.get(index));
+						list.remove(index);
+						adapter.notifyDataSetChanged();
+					}
+				});
+			} else {
+				edit.setText("±à¼­");
+			}
+//			runOnUiThread(new Runnable() {
+//				@Override
+//				public void run() {
+//					del.setVisibility(View.VISIBLE);
+//					adapter.notifyDataSetChanged();
+//				}
+//			});	
 		default:
 			break;
 		}

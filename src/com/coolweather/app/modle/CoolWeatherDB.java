@@ -156,5 +156,14 @@ public class CoolWeatherDB {
 		}
 		return list;
 	}
+	
+	//删除ChoosedCountry表中的数据
+	public void delChoosedCountry(ChoosedCountryList choosedCountry) {
+		try {
+			db.delete("ChoosedCountry", "choosedcountry_code=?", new String[] {choosedCountry.getCode()});
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 		
 }

@@ -304,6 +304,7 @@ public class WeatherActivity extends Activity {
 			}
 			
 		});
+//		viewPager.getAdapter().notifyDataSetChanged();
 //		viewPager.setCurrentItem(index);
 		viewPager.setOnPageChangeListener(new OnPageChangeListener() {
 			//当滑动状态改变时调用
@@ -317,6 +318,7 @@ public class WeatherActivity extends Activity {
           //当新页面被选中时调用
             @Override
             public void onPageSelected(int arg0) {
+//            	index = arg0;
             }
 		});
 	}

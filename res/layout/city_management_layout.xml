@@ -19,17 +19,31 @@
             android:text="返回"
             android:textSize="20sp"
             android:textColor="#FFF" />
+
        <TextView
-           android:id="@+id/add" 
+           android:id="@+id/edit"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_marginRight="20dp"
+           android:layout_alignParentRight="true"
+           android:layout_centerVertical="true"
            android:clickable="true"
+           android:text="编辑"
+           android:textColor="#FFF"
+           android:textSize="20sp" />
+
+       <TextView
+           android:id="@+id/add"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:layout_centerVertical="true"
-           android:layout_alignParentRight="true"
-           android:layout_marginRight="20dp"
+           android:layout_marginRight="18dp"
+           android:layout_toLeftOf="@+id/edit"
+           android:clickable="true"
            android:text="+"
-           android:textSize="30sp"
-           android:textColor="#FFF" />
+           android:textColor="#FFF"
+           android:textSize="30sp" />
+
     </RelativeLayout>
 	<ListView
 	    android:id="@+id/choosedCountry_list" 
