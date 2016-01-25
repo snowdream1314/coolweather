@@ -12,6 +12,8 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -33,7 +35,7 @@ public class ManageCityActivity extends Activity implements OnClickListener {
 	private ListView listView;
 	private ChoosedCountryListAdapter adapter;
 	private List<ChoosedCountryList> list = new ArrayList<ChoosedCountryList>();
-	private List<View> viewsList = new ArrayList<View>();
+//	private List<View> viewsList = new ArrayList<View>();
 	private List<ChoosedCountryList> choosedCountryList = new ArrayList<ChoosedCountryList>();
 	
 	//是否从weatherActivity跳转过来
@@ -86,6 +88,27 @@ public class ManageCityActivity extends Activity implements OnClickListener {
 		}
 	}
 	
+	//菜单
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.settings :
+			Intent intent = new Intent(ManageCityActivity.this, SettingActivity.class);
+			startActivity(intent);
+			finish();
+			break;
+		default:
+			break;
+		}
+		return true;
+	}
+	
 	//更新已选城市列表
 	private void initChoosedCountryList() {
 		choosedCountryList = coolWeatherDB.loadChoosedCountryList();
@@ -105,6 +128,7 @@ public class ManageCityActivity extends Activity implements OnClickListener {
 			listView.setSelection(0);
 		}
 	}
+	
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -149,11 +173,19 @@ public class ManageCityActivity extends Activity implements OnClickListener {
 	
 	@Override
 	public void onBackPressed() {
-		if (getIntent().getBooleanExtra("from_weather_activity", false)) {
+//		if (getIntent().getBooleanExtra("from_weather_activity", false)) {
 			Intent intent = new Intent(ManageCityActivity.this, WeatherActivity.class);
 			intent.putExtra("from_managecity_activity", true);
 			startActivity(intent);
 			finish();
+//		}
+	}
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		if (getIntent().getBooleanExtra("from_setting_activity", false)) {
+			initChoosedCountryList();
 		}
 	}
 }

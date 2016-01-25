@@ -1,13 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:background="#666" >
     
     <RelativeLayout 
         android:layout_width="match_parent"
         android:layout_height="50dp"
         android:background="#333">
-        <TextView
+        <!-- <TextView
             android:id="@+id/back" 
             android:clickable="true"
             android:layout_width="wrap_content"
@@ -17,37 +19,26 @@
             android:layout_marginLeft="20dp"
             android:text="返回"
             android:textSize="20sp"
-            android:textColor="#FFF" />
+            android:textColor="#FFF" /> -->
 
        <TextView
-           android:id="@+id/edit"
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:layout_marginRight="20dp"
-           android:layout_alignParentRight="true"
+           android:layout_centerHorizontal="true"
            android:layout_centerVertical="true"
            android:clickable="true"
-           android:text="编辑"
-           android:textColor="#FFF"
-           android:textSize="20sp" />
-
-       <TextView
-           android:id="@+id/add"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_centerVertical="true"
-           android:layout_marginRight="18dp"
-           android:layout_toLeftOf="@+id/edit"
-           android:clickable="true"
-           android:text="+"
+           android:text="设置"
            android:textColor="#FFF"
            android:textSize="30sp" />
 
     </RelativeLayout>
-	<ListView
-	    android:id="@+id/choosedCountry_list" 
-	    android:layout_width="match_parent"
-	    android:layout_height="wrap_content"
-	    android:background="#555">
-	</ListView>
+    
+   <ListView 
+        android:id="@+id/setting_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#555">
+        
+    </ListView>
+
 </LinearLayout>

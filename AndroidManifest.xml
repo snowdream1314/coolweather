@@ -28,6 +28,7 @@
             >
         </activity>
         <activity android:name="com.coolweather.app.activity.ManageCityActivity" ></activity>
+        <activity android:name="com.coolweather.app.activity.SettingActivity" ></activity>
         <service android:name="com.coolweather.app.service.AutoUpdateServic" ></service>
         <receiver android:name="com.coolweather.app.receiver.AutoUpdateReceive" ></receiver>
     </application>
