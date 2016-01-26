@@ -15,7 +15,7 @@
             android:layout_centerVertical="true"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="20dp"
-            android:text="返回"
+            android:text="@string/back"
             android:textSize="20sp"
             android:textColor="#FFF" />
 
@@ -27,7 +27,7 @@
            android:layout_alignParentRight="true"
            android:layout_centerVertical="true"
            android:clickable="true"
-           android:text="编辑"
+           android:text="@string/edit"
            android:textColor="#FFF"
            android:textSize="20sp" />
 
@@ -39,15 +39,17 @@
            android:layout_marginRight="18dp"
            android:layout_toLeftOf="@+id/edit"
            android:clickable="true"
-           android:text="+"
+           android:text="@string/add"
            android:textColor="#FFF"
            android:textSize="30sp" />
 
     </RelativeLayout>
+    
 	<ListView
 	    android:id="@+id/choosedCountry_list" 
 	    android:layout_width="match_parent"
 	    android:layout_height="wrap_content"
 	    android:background="#555">
 	</ListView>
+	
 </LinearLayout>

@@ -27,7 +27,7 @@
            android:layout_centerHorizontal="true"
            android:layout_centerVertical="true"
            android:clickable="true"
-           android:text="设置"
+           android:text="@string/action_settings"
            android:textColor="#FFF"
            android:textSize="30sp" />
 

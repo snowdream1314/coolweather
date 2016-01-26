@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 public class SettingAdapter extends ArrayAdapter<ChoosedCountryList> {
 	
-private int resourceId;
+	private int resourceId;
 	
 	public SettingAdapter(Context context, int textViewResourceId, List<ChoosedCountryList> objects) {
 		super(context, textViewResourceId, objects);

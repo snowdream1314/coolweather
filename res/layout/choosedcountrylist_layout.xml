@@ -12,7 +12,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="10dp"
         android:clickable="true"
-        android:text="-"
+        android:text="@string/del"
         android:textColor="#FF0"
         android:textSize="20sp" />
     <TextView 
@@ -54,7 +54,7 @@
 	        android:layout_gravity="center_horizontal"
 	        android:layout_marginLeft="5dp"
 	        android:layout_marginRight="5dp"
-	        android:text="~"
+	        android:text="@string/between"
 	        android:textColor="#FFF"
 	    	android:textSize="20sp"/>
 	     <TextView 

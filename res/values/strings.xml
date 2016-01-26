@@ -5,5 +5,15 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">设置</string>
     <string name="edit">编辑</string>
-
+    <string name="back">返回</string>
+    <string name="sunset">日落 : </string>
+    <string name="sunrise">日出 : </string>
+    <string name="shidu">湿度 : </string>
+    <string name="pm25">PM25 : </string>
+    <string name="Aqi">AQI : </string>
+	<string name="between">~</string>
+	<string name="del">-</string>
+	<string name="add">+</string>
+	
+	
 </resources>
